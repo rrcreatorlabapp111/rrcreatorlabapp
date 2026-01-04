@@ -16,10 +16,13 @@ import {
   Sparkles,
   Timer,
   ChevronDown,
+  Youtube,
 } from "lucide-react";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface Tool {
   id: string;
@@ -182,6 +185,30 @@ export const ToolsPage = () => {
         <h1 className="text-2xl font-bold text-foreground">Creator Tools</h1>
         <p className="text-muted-foreground">AI-powered tools for content creators</p>
       </div>
+
+      {/* Featured: YouTube Assistant */}
+      <Card 
+        className="relative overflow-hidden cursor-pointer border-destructive/30 bg-gradient-to-br from-destructive/10 to-destructive/5 hover:border-destructive/50 transition-all animate-fade-in"
+        onClick={() => navigate("/youtube-assistant")}
+      >
+        <CardContent className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-xl bg-destructive/20">
+              <Youtube className="h-6 w-6 text-destructive" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold text-foreground">YouTube Assistant</h3>
+                <Badge variant="secondary" className="text-[10px]">AI-Powered</Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Analyze any channel & get personalized scripts, shorts ideas, content plans & growth tips
+              </p>
+            </div>
+            <Sparkles className="h-5 w-5 text-destructive" />
+          </div>
+        </CardContent>
+      </Card>
 
       {toolCategories.map((category, catIndex) => (
         <Collapsible
