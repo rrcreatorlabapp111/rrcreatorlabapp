@@ -1,10 +1,9 @@
 import { PricingCard } from "@/components/services/PricingCard";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Search, Image } from "lucide-react";
+import { ExternalLink, Search, Image, Mail, Phone, Instagram } from "lucide-react";
 
-const WHATSAPP_MESSAGE = encodeURIComponent("Hi RR Creator Labs, I want to grow my channel.");
-const WHATSAPP_LINK = `https://wa.me/919483886270?text=${WHATSAPP_MESSAGE}`;
+const GOOGLE_FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLSc7w7_crTXDPXa1Rz_2OOkAX7k_5jq88dEdLr8KiiaICcGh5g/viewform";
 
 const plans = [
   {
@@ -65,7 +64,7 @@ const additionalServices = [
 
 export const ServicesPage = () => {
   const handleContact = () => {
-    window.open(WHATSAPP_LINK, "_blank");
+    window.open(GOOGLE_FORM_LINK, "_blank");
   };
 
   return (
@@ -119,12 +118,48 @@ export const ServicesPage = () => {
           Ready to Grow?
         </h3>
         <p className="text-sm text-muted-foreground mb-4">
-          Let's discuss your creator journey
+          Fill out our form and we'll get back to you
         </p>
-        <Button variant="whatsapp" size="lg" onClick={handleContact} className="w-full">
-          <MessageCircle className="h-5 w-5" />
-          Contact on WhatsApp
+        <Button variant="gradient" size="lg" onClick={handleContact} className="w-full">
+          <ExternalLink className="h-5 w-5" />
+          Fill Contact Form
         </Button>
+      </Card>
+
+      {/* Contact Info */}
+      <Card variant="gradient" className="p-5 animate-slide-up" style={{ animationDelay: "0.5s" }}>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Contact Us Directly</h3>
+        <div className="space-y-3">
+          <a
+            href="mailto:rrcreatorlab@gmail.com"
+            className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <div className="p-2 rounded-lg bg-muted">
+              <Mail className="h-4 w-4 text-primary" />
+            </div>
+            <span className="text-sm">rrcreatorlab@gmail.com</span>
+          </a>
+          <a
+            href="tel:+919483886270"
+            className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <div className="p-2 rounded-lg bg-muted">
+              <Phone className="h-4 w-4 text-primary" />
+            </div>
+            <span className="text-sm">+91 9483886270</span>
+          </a>
+          <a
+            href="https://instagram.com/rrcreatorlab"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <div className="p-2 rounded-lg bg-muted">
+              <Instagram className="h-4 w-4 text-primary" />
+            </div>
+            <span className="text-sm">@rrcreatorlab</span>
+          </a>
+        </div>
       </Card>
     </div>
   );
