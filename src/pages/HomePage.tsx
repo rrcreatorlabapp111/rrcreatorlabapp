@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FileText, Lightbulb, Calculator, MessageCircle, Sparkles } from "lucide-react";
+import { FileText, Lightbulb, Calculator, MessageCircle, Sparkles, BarChart3, ChevronRight } from "lucide-react";
 import { QuickActionButton } from "@/components/home/QuickActionButton";
 import { Card } from "@/components/ui/card";
 
@@ -30,6 +30,26 @@ export const HomePage = () => {
         </p>
       </div>
 
+      {/* Dashboard Card */}
+      <Card
+        variant="glow"
+        className="p-4 cursor-pointer hover:shadow-glow transition-all duration-300 animate-slide-up"
+        onClick={() => navigate("/dashboard")}
+      >
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl gradient-primary">
+            <BarChart3 className="h-6 w-6 text-foreground" />
+          </div>
+          <div className="flex-1">
+            <h2 className="font-semibold text-foreground">Creator Dashboard</h2>
+            <p className="text-sm text-muted-foreground">
+              Analytics, saved content & growth tracking
+            </p>
+          </div>
+          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+        </div>
+      </Card>
+
       {/* Quick Actions */}
       <div className="grid grid-cols-2 gap-3 animate-slide-up" style={{ animationDelay: "0.1s" }}>
         {quickActions.map((action) => (
@@ -49,7 +69,7 @@ export const HomePage = () => {
       </div>
 
       {/* Highlight Section */}
-      <Card variant="glow" className="p-5 animate-slide-up" style={{ animationDelay: "0.2s" }}>
+      <Card variant="gradient" className="p-5 animate-slide-up" style={{ animationDelay: "0.2s" }}>
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 rounded-lg gradient-primary">
             <Sparkles className="h-5 w-5 text-foreground" />

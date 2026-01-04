@@ -10,6 +10,7 @@ import { HomePage } from "@/pages/HomePage";
 import { ToolsPage } from "@/pages/ToolsPage";
 import { TipsPage } from "@/pages/TipsPage";
 import { ServicesPage } from "@/pages/ServicesPage";
+import { DashboardPage } from "@/pages/DashboardPage";
 import { TagGeneratorPage } from "@/pages/tools/TagGeneratorPage";
 import { ScriptGeneratorPage } from "@/pages/tools/ScriptGeneratorPage";
 import { TextToScriptPage } from "@/pages/tools/TextToScriptPage";
@@ -33,6 +34,7 @@ const App = () => {
           <AppLayout>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/tools" element={<ToolsPage />} />
               <Route path="/tips" element={<TipsPage />} />
               <Route path="/services" element={<ServicesPage />} />
