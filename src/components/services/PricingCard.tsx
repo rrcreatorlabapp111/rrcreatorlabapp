@@ -10,6 +10,7 @@ interface PricingCardProps {
   features: string[];
   buttonText: string;
   isPopular?: boolean;
+  bestFor?: string;
   onContact: () => void;
 }
 
@@ -19,6 +20,7 @@ export const PricingCard = ({
   features,
   buttonText,
   isPopular,
+  bestFor,
   onContact,
 }: PricingCardProps) => {
   return (
@@ -37,7 +39,14 @@ export const PricingCard = ({
         </div>
       )}
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl">{title}</CardTitle>
+        <div className="flex items-center gap-2 flex-wrap">
+          <CardTitle className="text-xl">{title}</CardTitle>
+          {bestFor && (
+            <Badge variant="outline" className="text-xs bg-muted/50 text-muted-foreground border-border/50">
+              Best for: {bestFor}
+            </Badge>
+          )}
+        </div>
         <p className="text-2xl font-bold gradient-text">{price}</p>
       </CardHeader>
       <CardContent className="space-y-3">
