@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FileText, Lightbulb, ExternalLink, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame, Settings, TrendingUp, Users, Zap } from "lucide-react";
+import { FileText, Lightbulb, ExternalLink, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame, Settings, TrendingUp, Users, Zap, Star, Quote } from "lucide-react";
 import { QuickActionButton } from "@/components/home/QuickActionButton";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,30 @@ const recommendedTools = [
   { icon: Hash, title: "Tag Generator", description: "Optimize your reach", path: "/tools/tags" },
   { icon: Search, title: "SEO Score", description: "Improve discoverability", path: "/tools/seo" },
   { icon: Flame, title: "Trending Topics", description: "Catch viral waves", path: "/tools/trending" },
+];
+
+const testimonials = [
+  {
+    name: "Priya Sharma",
+    role: "YouTube Creator",
+    subscribers: "50K+",
+    quote: "RR Creator Labs helped me grow from 5K to 50K subscribers in just 6 months. The script generator saves me hours every week!",
+    rating: 5,
+  },
+  {
+    name: "Rahul Verma",
+    role: "Instagram Influencer",
+    subscribers: "120K+",
+    quote: "The trending topics tool is incredible. I always know what content will perform best. My engagement tripled!",
+    rating: 5,
+  },
+  {
+    name: "Sneha Patel",
+    role: "Shorts Creator",
+    subscribers: "200K+",
+    quote: "Best investment for any creator. The tag generator and SEO tools are game changers for discoverability.",
+    rating: 5,
+  },
 ];
 
 export const HomePage = () => {
@@ -250,8 +274,46 @@ export const HomePage = () => {
         </div>
       </div>
 
+      {/* Testimonials Section */}
+      <div className="space-y-3 animate-slide-up" style={{ animationDelay: "0.3s" }}>
+        <div className="flex items-center gap-2">
+          <Quote className="h-5 w-5 text-primary" />
+          <h2 className="text-lg font-semibold text-foreground">Creator Success Stories</h2>
+        </div>
+        <div className="space-y-3">
+          {testimonials.map((testimonial) => (
+            <Card key={testimonial.name} variant="gradient" className="p-4">
+              <div className="space-y-3">
+                {/* Rating Stars */}
+                <div className="flex gap-0.5">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                
+                {/* Quote */}
+                <p className="text-sm text-muted-foreground italic leading-relaxed">
+                  "{testimonial.quote}"
+                </p>
+                
+                {/* Author Info */}
+                <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{testimonial.name}</p>
+                    <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                  </div>
+                  <div className="px-2 py-1 rounded-full bg-primary/20">
+                    <span className="text-xs font-medium text-primary">{testimonial.subscribers}</span>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
       {/* Stats Preview */}
-      <div className="grid grid-cols-3 gap-3 animate-slide-up" style={{ animationDelay: "0.3s" }}>
+      <div className="grid grid-cols-3 gap-3 animate-slide-up" style={{ animationDelay: "0.35s" }}>
         {[
           { value: "14+", label: "AI Tools" },
           { value: "100+", label: "Creators" },
