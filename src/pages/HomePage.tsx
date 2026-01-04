@@ -1,17 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import { FileText, Lightbulb, MessageCircle, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame, Settings } from "lucide-react";
+import { FileText, Lightbulb, ExternalLink, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame, Settings } from "lucide-react";
 import { QuickActionButton } from "@/components/home/QuickActionButton";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
-const WHATSAPP_MESSAGE = encodeURIComponent("Hi RR Creator Labs, I want to grow my channel.");
-const WHATSAPP_LINK = `https://wa.me/919483886270?text=${WHATSAPP_MESSAGE}`;
+const GOOGLE_FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLSc7w7_crTXDPXa1Rz_2OOkAX7k_5jq88dEdLr8KiiaICcGh5g/viewform";
 
 const quickActions = [
   { icon: FileText, label: "Script Generator", path: "/tools/script" },
   { icon: Lightbulb, label: "Short Ideas", path: "/tools/shorts-ideas" },
-  { icon: MessageCircle, label: "WhatsApp", path: WHATSAPP_LINK, external: true },
+  { icon: ExternalLink, label: "Contact Us", path: GOOGLE_FORM_LINK, external: true },
 ];
 
 const recommendedTools = [

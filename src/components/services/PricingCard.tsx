@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, MessageCircle } from "lucide-react";
+import { Check, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PricingCardProps {
@@ -65,7 +65,7 @@ export const PricingCard = ({
           className="w-full"
           onClick={onContact}
         >
-          <MessageCircle className="h-4 w-4" />
+          <ExternalLink className="h-4 w-4" />
           {buttonText}
         </Button>
       </CardFooter>
