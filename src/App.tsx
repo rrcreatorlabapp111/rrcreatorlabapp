@@ -13,6 +13,7 @@ import { TipsPage } from "@/pages/TipsPage";
 import { ServicesPage } from "@/pages/ServicesPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { AuthPage } from "@/pages/AuthPage";
+import { ProfilePage } from "@/pages/ProfilePage";
 import { TagGeneratorPage } from "@/pages/tools/TagGeneratorPage";
 import { ScriptGeneratorPage } from "@/pages/tools/ScriptGeneratorPage";
 import { TextToScriptPage } from "@/pages/tools/TextToScriptPage";
@@ -47,6 +48,7 @@ const App = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/tools" element={<ToolsPage />} />
                 <Route path="/tips" element={<TipsPage />} />
                 <Route path="/services" element={<ServicesPage />} />
