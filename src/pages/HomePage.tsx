@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FileText, Lightbulb, Calculator, MessageCircle, Sparkles, BarChart3, ChevronRight, User, LogIn } from "lucide-react";
+import { FileText, Lightbulb, MessageCircle, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame } from "lucide-react";
 import { QuickActionButton } from "@/components/home/QuickActionButton";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,16 +8,21 @@ import { useAuth } from "@/hooks/useAuth";
 const WHATSAPP_MESSAGE = encodeURIComponent("Hi RR Creator Labs, I want to grow my channel.");
 const WHATSAPP_LINK = `https://wa.me/919999999999?text=${WHATSAPP_MESSAGE}`;
 
+const quickActions = [
+  { icon: FileText, label: "Script Generator", path: "/tools/script" },
+  { icon: Lightbulb, label: "Short Ideas", path: "/tools/shorts-ideas" },
+  { icon: MessageCircle, label: "WhatsApp", path: WHATSAPP_LINK, external: true },
+];
+
+const recommendedTools = [
+  { icon: Hash, title: "Tag Generator", description: "Optimize your reach", path: "/tools/tags" },
+  { icon: Search, title: "SEO Score", description: "Improve discoverability", path: "/tools/seo" },
+  { icon: Flame, title: "Trending Topics", description: "Catch viral waves", path: "/tools/trending" },
+];
+
 export const HomePage = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-
-  const quickActions = [
-    { icon: FileText, label: "Script Generator", path: "/tools/script" },
-    { icon: Lightbulb, label: "Short Ideas", path: "/tools/shorts-ideas" },
-    { icon: Calculator, label: "Growth Calculator", path: "/tools/growth-calc" },
-    { icon: MessageCircle, label: "WhatsApp", path: WHATSAPP_LINK, external: true },
-  ];
 
   return (
     <div className="px-4 py-6 space-y-6">
@@ -31,6 +36,16 @@ export const HomePage = () => {
         <p className="text-muted-foreground text-lg">
           Grow Your Content. Build Your Brand.
         </p>
+        {/* Primary CTA */}
+        <Button
+          variant="gradient"
+          size="xl"
+          className="mt-4 w-full max-w-xs"
+          onClick={() => navigate("/tools")}
+        >
+          Start Creating
+          <ArrowRight className="h-5 w-5" />
+        </Button>
       </div>
 
       {/* Auth Card */}
@@ -80,8 +95,8 @@ export const HomePage = () => {
         </div>
       </Card>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-2 gap-3 animate-slide-up" style={{ animationDelay: "0.1s" }}>
+      {/* Quick Actions - Reduced to 3 */}
+      <div className="grid grid-cols-3 gap-3 animate-slide-up" style={{ animationDelay: "0.1s" }}>
         {quickActions.map((action) => (
           <QuickActionButton
             key={action.label}
@@ -98,33 +113,42 @@ export const HomePage = () => {
         ))}
       </div>
 
-      {/* Highlight Section */}
-      <Card variant="gradient" className="p-5 animate-slide-up" style={{ animationDelay: "0.2s" }}>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-lg gradient-primary">
-            <Sparkles className="h-5 w-5 text-foreground" />
-          </div>
-          <h2 className="text-lg font-semibold text-foreground">Creator Growth Tools</h2>
+      {/* Recommended Tools Section */}
+      <div className="space-y-3 animate-slide-up" style={{ animationDelay: "0.15s" }}>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-foreground">Recommended Tools</h2>
+          <Button variant="ghost" size="sm" onClick={() => navigate("/tools")} className="text-primary">
+            View all
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
-        <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-          AI-powered tools to help you create better content, grow faster, and build your personal brand.
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {["Tag Generator", "Script AI", "Content Planner", "Analytics"].map((tool) => (
-            <span
-              key={tool}
-              className="px-3 py-1.5 rounded-full text-xs font-medium bg-muted text-muted-foreground border border-border/50"
+        <div className="space-y-2">
+          {recommendedTools.map((tool) => (
+            <Card
+              key={tool.title}
+              variant="gradient"
+              className="p-3 cursor-pointer hover:border-primary/50 transition-all duration-300"
+              onClick={() => navigate(tool.path)}
             >
-              {tool}
-            </span>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg gradient-primary">
+                  <tool.icon className="h-4 w-4 text-foreground" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-foreground text-sm">{tool.title}</h3>
+                  <p className="text-xs text-muted-foreground">{tool.description}</p>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </Card>
           ))}
         </div>
-      </Card>
+      </div>
 
       {/* Stats Preview */}
-      <div className="grid grid-cols-3 gap-3 animate-slide-up" style={{ animationDelay: "0.3s" }}>
+      <div className="grid grid-cols-3 gap-3 animate-slide-up" style={{ animationDelay: "0.2s" }}>
         {[
-          { value: "6+", label: "AI Tools" },
+          { value: "14+", label: "AI Tools" },
           { value: "100+", label: "Creators" },
           { value: "24/7", label: "Support" },
         ].map((stat) => (

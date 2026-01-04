@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Hash,
@@ -14,8 +15,11 @@ import {
   Users,
   Sparkles,
   Timer,
+  ChevronDown,
 } from "lucide-react";
 import { ToolCard } from "@/components/tools/ToolCard";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 
 interface Tool {
   id: string;
@@ -158,6 +162,19 @@ const toolCategories: ToolCategory[] = [
 
 export const ToolsPage = () => {
   const navigate = useNavigate();
+  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({
+    "Content Creation": true,
+    "Analytics & Growth": true,
+    "Strategy & SEO": true,
+    "Optimization": true,
+  });
+
+  const toggleCategory = (title: string) => {
+    setOpenCategories((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
 
   return (
     <div className="px-4 py-6 space-y-6">
@@ -167,16 +184,30 @@ export const ToolsPage = () => {
       </div>
 
       {toolCategories.map((category, catIndex) => (
-        <div key={category.title} className="space-y-3">
-          <div
-            className="animate-fade-in"
-            style={{ animationDelay: `${catIndex * 0.1}s` }}
-          >
-            <h2 className="text-lg font-semibold text-foreground">{category.title}</h2>
-            <p className="text-sm text-muted-foreground">{category.description}</p>
-          </div>
+        <Collapsible
+          key={category.title}
+          open={openCategories[category.title]}
+          onOpenChange={() => toggleCategory(category.title)}
+        >
+          <CollapsibleTrigger className="w-full">
+            <div
+              className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/50 hover:border-primary/30 transition-all duration-300 animate-fade-in cursor-pointer"
+              style={{ animationDelay: `${catIndex * 0.1}s` }}
+            >
+              <div className="text-left">
+                <h2 className="text-lg font-semibold text-foreground">{category.title}</h2>
+                <p className="text-sm text-muted-foreground">{category.description}</p>
+              </div>
+              <ChevronDown
+                className={cn(
+                  "h-5 w-5 text-muted-foreground transition-transform duration-300",
+                  openCategories[category.title] && "rotate-180"
+                )}
+              />
+            </div>
+          </CollapsibleTrigger>
 
-          <div className="space-y-2">
+          <CollapsibleContent className="pt-3 space-y-2">
             {category.tools.map((tool, toolIndex) => (
               <div
                 key={tool.id}
@@ -191,8 +222,8 @@ export const ToolsPage = () => {
                 />
               </div>
             ))}
-          </div>
-        </div>
+          </CollapsibleContent>
+        </Collapsible>
       ))}
     </div>
   );

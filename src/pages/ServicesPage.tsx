@@ -10,6 +10,7 @@ const plans = [
   {
     title: "Starter Creator Plan",
     price: "₹2,000 – ₹8,000 / month",
+    bestFor: "New Creators",
     features: [
       "Content strategy & ideas",
       "8–10 reels / shorts editing",
@@ -22,6 +23,7 @@ const plans = [
   {
     title: "Growth Plan",
     price: "₹8,000 – ₹20,000 / month",
+    bestFor: "Scaling Creators",
     features: [
       "Complete growth strategy",
       "12–20 reels / shorts editing",
@@ -34,6 +36,7 @@ const plans = [
   {
     title: "Premium Management",
     price: "₹25,000 – ₹50,000 / month",
+    bestFor: "Established Influencers",
     features: [
       "End-to-end account management",
       "Advanced growth execution",
@@ -86,6 +89,7 @@ export const ServicesPage = () => {
               features={plan.features}
               buttonText={plan.buttonText}
               isPopular={plan.isPopular}
+              bestFor={plan.bestFor}
               onContact={handleContact}
             />
           </div>
