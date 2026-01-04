@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { FileText, Lightbulb, ExternalLink, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame, Settings, TrendingUp, Users, Zap, Star, Quote } from "lucide-react";
 import { QuickActionButton } from "@/components/home/QuickActionButton";
+import { TutorialSection } from "@/components/home/TutorialSection";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import growthAnalytics from "@/assets/growth-analytics.png";
 import creatorSuccess from "@/assets/creator-success.png";
 import socialEngagement from "@/assets/social-engagement.png";
-
 const GOOGLE_FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLSc7w7_crTXDPXa1Rz_2OOkAX7k_5jq88dEdLr8KiiaICcGh5g/viewform";
 
 const quickActions = [
@@ -249,6 +249,9 @@ export const HomePage = () => {
           </Card>
         </div>
       </div>
+
+      {/* Tutorials Section */}
+      <TutorialSection />
 
       {/* Why Choose Us Section */}
       <div className="space-y-3 animate-slide-up" style={{ animationDelay: "0.25s" }}>
