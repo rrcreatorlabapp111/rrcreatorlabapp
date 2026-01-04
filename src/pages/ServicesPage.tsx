@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle, Search, Image } from "lucide-react";
 
 const WHATSAPP_MESSAGE = encodeURIComponent("Hi RR Creator Labs, I want to grow my channel.");
-const WHATSAPP_LINK = `https://wa.me/919999999999?text=${WHATSAPP_MESSAGE}`;
+const WHATSAPP_LINK = `https://wa.me/919483886270?text=${WHATSAPP_MESSAGE}`;
 
 const plans = [
   {

@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { FileText, Lightbulb, MessageCircle, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame } from "lucide-react";
+import { FileText, Lightbulb, MessageCircle, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame, Settings } from "lucide-react";
 import { QuickActionButton } from "@/components/home/QuickActionButton";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
 const WHATSAPP_MESSAGE = encodeURIComponent("Hi RR Creator Labs, I want to grow my channel.");
-const WHATSAPP_LINK = `https://wa.me/919999999999?text=${WHATSAPP_MESSAGE}`;
+const WHATSAPP_LINK = `https://wa.me/919483886270?text=${WHATSAPP_MESSAGE}`;
 
 const quickActions = [
   { icon: FileText, label: "Script Generator", path: "/tools/script" },
@@ -48,7 +48,7 @@ export const HomePage = () => {
         </Button>
       </div>
 
-      {/* Auth Card */}
+      {/* Auth Card - Show for logged out users */}
       {!loading && !user && (
         <Card
           variant="gradient"
@@ -64,6 +64,31 @@ export const HomePage = () => {
               <p className="text-sm text-muted-foreground">
                 Save your content & track growth
               </p>
+            </div>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+          </div>
+        </Card>
+      )}
+
+      {/* Profile Card - Show for logged in users */}
+      {!loading && user && (
+        <Card
+          variant="gradient"
+          className="p-4 cursor-pointer hover:border-primary/50 transition-all duration-300 animate-slide-up"
+          onClick={() => navigate("/profile")}
+        >
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl gradient-primary">
+              <Settings className="h-5 w-5 text-foreground" />
+            </div>
+            <div className="flex-1">
+              <h2 className="font-semibold text-foreground">My Profile</h2>
+              <p className="text-sm text-muted-foreground">
+                Manage your account settings
+              </p>
+            </div>
+            <div className="p-2 rounded-full bg-green-500/20">
+              <User className="h-4 w-4 text-green-400" />
             </div>
             <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </div>
