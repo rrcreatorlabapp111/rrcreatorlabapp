@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { FileText, Lightbulb, ExternalLink, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame, Settings } from "lucide-react";
+import { FileText, Lightbulb, ExternalLink, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame, Settings, TrendingUp, Users, Zap } from "lucide-react";
 import { QuickActionButton } from "@/components/home/QuickActionButton";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import growthAnalytics from "@/assets/growth-analytics.png";
+import creatorSuccess from "@/assets/creator-success.png";
+import socialEngagement from "@/assets/social-engagement.png";
 
 const GOOGLE_FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLSc7w7_crTXDPXa1Rz_2OOkAX7k_5jq88dEdLr8KiiaICcGh5g/viewform";
 
@@ -169,8 +172,86 @@ export const HomePage = () => {
         </div>
       </div>
 
+      {/* Visual Showcase - Growth Gallery */}
+      <div className="space-y-3 animate-slide-up" style={{ animationDelay: "0.2s" }}>
+        <div className="flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-primary" />
+          <h2 className="text-lg font-semibold text-foreground">See What's Possible</h2>
+        </div>
+        
+        {/* Main Showcase Image */}
+        <Card variant="gradient" className="overflow-hidden">
+          <img 
+            src={creatorSuccess} 
+            alt="Content creator celebrating success with social media growth" 
+            className="w-full h-48 object-cover"
+          />
+          <div className="p-4">
+            <h3 className="font-semibold text-foreground">Grow Your Audience</h3>
+            <p className="text-sm text-muted-foreground">Join creators who've scaled their channels with our tools</p>
+          </div>
+        </Card>
+
+        {/* Two-column showcase */}
+        <div className="grid grid-cols-2 gap-3">
+          <Card variant="gradient" className="overflow-hidden">
+            <img 
+              src={growthAnalytics} 
+              alt="Analytics dashboard showing channel growth metrics" 
+              className="w-full h-24 object-cover"
+            />
+            <div className="p-3">
+              <div className="flex items-center gap-1.5 mb-1">
+                <BarChart3 className="h-3.5 w-3.5 text-primary" />
+                <span className="text-xs font-medium text-foreground">Track Growth</span>
+              </div>
+              <p className="text-xs text-muted-foreground">Real-time analytics</p>
+            </div>
+          </Card>
+          
+          <Card variant="gradient" className="overflow-hidden">
+            <img 
+              src={socialEngagement} 
+              alt="Social media engagement and followers growth" 
+              className="w-full h-24 object-cover"
+            />
+            <div className="p-3">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Users className="h-3.5 w-3.5 text-primary" />
+                <span className="text-xs font-medium text-foreground">Boost Engagement</span>
+              </div>
+              <p className="text-xs text-muted-foreground">Grow followers fast</p>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      {/* Why Choose Us Section */}
+      <div className="space-y-3 animate-slide-up" style={{ animationDelay: "0.25s" }}>
+        <h2 className="text-lg font-semibold text-foreground">Why Creators Love Us</h2>
+        <div className="grid grid-cols-1 gap-2">
+          {[
+            { icon: Zap, title: "AI-Powered Tools", desc: "Generate scripts, tags & ideas instantly" },
+            { icon: TrendingUp, title: "Data-Driven Growth", desc: "Track what works and scale faster" },
+            { icon: Users, title: "Expert Support", desc: "Get help from real content creators" },
+          ].map((item) => (
+            <Card key={item.title} variant="gradient" className="p-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-primary/20">
+                  <item.icon className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium text-foreground">{item.title}</h3>
+                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
       {/* Stats Preview */}
-      <div className="grid grid-cols-3 gap-3 animate-slide-up" style={{ animationDelay: "0.2s" }}>
+      <div className="grid grid-cols-3 gap-3 animate-slide-up" style={{ animationDelay: "0.3s" }}>
         {[
           { value: "14+", label: "AI Tools" },
           { value: "100+", label: "Creators" },
