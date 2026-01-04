@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, FileText, Copy, Check } from "lucide-react";
+import { ArrowLeft, FileText, Copy, Check, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
+import { addSavedContent } from "@/lib/database";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const platforms = ["YouTube", "Shorts", "Reels"];
 const tones = ["Educational", "Viral", "Storytelling"];
@@ -18,12 +21,25 @@ interface Script {
 
 export const ScriptGeneratorPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [topic, setTopic] = useState("");
   const [platform, setPlatform] = useState("YouTube");
   const [tone, setTone] = useState("Educational");
   const [script, setScript] = useState<Script | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const saveMutation = useMutation({
+    mutationFn: addSavedContent,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["saved_content"] });
+      toast.success("Script saved to dashboard!");
+    },
+    onError: () => {
+      toast.error("Failed to save script");
+    },
+  });
 
   const generateScript = () => {
     if (!topic.trim()) {
@@ -69,6 +85,26 @@ export const ScriptGeneratorPage = () => {
     setCopied(true);
     toast.success("Script copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const saveScript = () => {
+    if (!script || !user) {
+      if (!user) {
+        toast.error("Please sign in to save scripts");
+        navigate("/auth");
+      }
+      return;
+    }
+
+    const fullScript = `HOOK:\n${script.hook}\n\nMAIN SCRIPT:\n${script.content}\n\nCALL TO ACTION:\n${script.cta}`;
+    
+    saveMutation.mutate({
+      user_id: user.id,
+      type: "script",
+      title: `${topic} - ${platform} ${tone} Script`,
+      content: fullScript,
+      preview: script.hook,
+    });
   };
 
   return (
@@ -150,10 +186,21 @@ export const ScriptGeneratorPage = () => {
         <div className="space-y-4 animate-slide-up">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-foreground">Your Script</h2>
-            <Button variant="ghost" size="sm" onClick={copyScript}>
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              {copied ? "Copied" : "Copy"}
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="ghost" size="sm" onClick={copyScript}>
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                {copied ? "Copied" : "Copy"}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={saveScript}
+                disabled={saveMutation.isPending}
+              >
+                <Save className="h-4 w-4" />
+                Save
+              </Button>
+            </div>
           </div>
 
           <Card variant="glow" className="p-5 space-y-4">

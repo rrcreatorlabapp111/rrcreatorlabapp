@@ -1,13 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import { FileText, Lightbulb, Calculator, MessageCircle, Sparkles, BarChart3, ChevronRight } from "lucide-react";
+import { FileText, Lightbulb, Calculator, MessageCircle, Sparkles, BarChart3, ChevronRight, User, LogIn } from "lucide-react";
 import { QuickActionButton } from "@/components/home/QuickActionButton";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 const WHATSAPP_MESSAGE = encodeURIComponent("Hi RR Creator Labs, I want to grow my channel.");
 const WHATSAPP_LINK = `https://wa.me/919999999999?text=${WHATSAPP_MESSAGE}`;
 
 export const HomePage = () => {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
 
   const quickActions = [
     { icon: FileText, label: "Script Generator", path: "/tools/script" },
@@ -30,6 +33,28 @@ export const HomePage = () => {
         </p>
       </div>
 
+      {/* Auth Card */}
+      {!loading && !user && (
+        <Card
+          variant="gradient"
+          className="p-4 cursor-pointer hover:border-primary/50 transition-all duration-300 animate-slide-up"
+          onClick={() => navigate("/auth")}
+        >
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl bg-muted">
+              <LogIn className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1">
+              <h2 className="font-semibold text-foreground">Sign In</h2>
+              <p className="text-sm text-muted-foreground">
+                Save your content & track growth
+              </p>
+            </div>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+          </div>
+        </Card>
+      )}
+
       {/* Dashboard Card */}
       <Card
         variant="glow"
@@ -43,9 +68,14 @@ export const HomePage = () => {
           <div className="flex-1">
             <h2 className="font-semibold text-foreground">Creator Dashboard</h2>
             <p className="text-sm text-muted-foreground">
-              Analytics, saved content & growth tracking
+              {user ? "View analytics & saved content" : "Analytics, saved content & growth tracking"}
             </p>
           </div>
+          {user && (
+            <div className="p-2 rounded-full bg-green-500/20">
+              <User className="h-4 w-4 text-green-400" />
+            </div>
+          )}
           <ChevronRight className="h-5 w-5 text-muted-foreground" />
         </div>
       </Card>

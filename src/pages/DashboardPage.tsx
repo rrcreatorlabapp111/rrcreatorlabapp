@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Users,
@@ -9,6 +11,8 @@ import {
   BarChart3,
   FileText,
   Zap,
+  LogOut,
+  Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -18,97 +22,152 @@ import { SavedContentList } from "@/components/dashboard/SavedContentList";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-
-// Mock data - in production this would come from Supabase
-const mockGrowthData = [
-  { date: "Week 1", followers: 1200, views: 45 },
-  { date: "Week 2", followers: 1350, views: 52 },
-  { date: "Week 3", followers: 1420, views: 48 },
-  { date: "Week 4", followers: 1680, views: 67 },
-  { date: "Week 5", followers: 1890, views: 78 },
-  { date: "Week 6", followers: 2100, views: 85 },
-  { date: "Week 7", followers: 2450, views: 92 },
-];
-
-const mockSavedContent = [
-  {
-    id: "1",
-    type: "script" as const,
-    title: "How to Start a YouTube Channel in 2024",
-    preview: "Hey everyone! Today I want to share the exact steps I used to grow my channel from 0 to 10K subscribers...",
-    createdAt: "2 hours ago",
-  },
-  {
-    id: "2",
-    type: "tags" as const,
-    title: "Photography Tutorial Tags",
-    preview: "#photography #phototips #camerasettings #photoedit #lightroom...",
-    createdAt: "Yesterday",
-  },
-  {
-    id: "3",
-    type: "ideas" as const,
-    title: "Fitness Shorts Ideas",
-    preview: "5-minute ab workout, Protein shake recipes, Gym mistakes to avoid...",
-    createdAt: "3 days ago",
-  },
-  {
-    id: "4",
-    type: "plan" as const,
-    title: "Weekly Content Plan - Gaming",
-    preview: "Monday: Tutorial, Tuesday: Shorts, Wednesday: Stream highlights...",
-    createdAt: "1 week ago",
-  },
-];
-
-const mockActivities = [
-  {
-    id: "1",
-    type: "milestone" as const,
-    message: "🎉 You hit 2,500 followers!",
-    time: "1 hour ago",
-  },
-  {
-    id: "2",
-    type: "view" as const,
-    message: "Your latest video reached 10K views",
-    time: "3 hours ago",
-  },
-  {
-    id: "3",
-    type: "follower" as const,
-    message: "+45 new followers today",
-    time: "5 hours ago",
-  },
-  {
-    id: "4",
-    type: "like" as const,
-    message: "Your reel received 500+ likes",
-    time: "Yesterday",
-  },
-  {
-    id: "5",
-    type: "comment" as const,
-    message: "12 new comments on your tutorial",
-    time: "Yesterday",
-  },
-];
+import {
+  getSavedContent,
+  deleteSavedContent,
+  getGrowthStats,
+  getActivityLog,
+  addGrowthStats,
+} from "@/lib/database";
+import { format, subDays } from "date-fns";
 
 const tabs = ["Overview", "Content", "Activity"];
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
+  const { user, loading, signOut } = useAuth();
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("Overview");
-  const [savedContent, setSavedContent] = useState(mockSavedContent);
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/auth");
+    }
+  }, [user, loading, navigate]);
+
+  // Fetch saved content
+  const { data: savedContent = [], isLoading: contentLoading } = useQuery({
+    queryKey: ["saved_content", user?.id],
+    queryFn: () => getSavedContent(user!.id),
+    enabled: !!user,
+  });
+
+  // Fetch growth stats
+  const { data: growthStats = [], isLoading: statsLoading } = useQuery({
+    queryKey: ["growth_stats", user?.id],
+    queryFn: () => getGrowthStats(user!.id),
+    enabled: !!user,
+  });
+
+  // Fetch activity log
+  const { data: activityLog = [], isLoading: activityLoading } = useQuery({
+    queryKey: ["activity_log", user?.id],
+    queryFn: () => getActivityLog(user!.id),
+    enabled: !!user,
+  });
+
+  // Delete content mutation
+  const deleteContentMutation = useMutation({
+    mutationFn: deleteSavedContent,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["saved_content"] });
+      toast.success("Content deleted");
+    },
+    onError: () => {
+      toast.error("Failed to delete content");
+    },
+  });
+
+  // Add sample growth data mutation
+  const addSampleDataMutation = useMutation({
+    mutationFn: async () => {
+      if (!user) return;
+      
+      const today = new Date();
+      for (let i = 6; i >= 0; i--) {
+        const date = subDays(today, i);
+        await addGrowthStats({
+          user_id: user.id,
+          date: format(date, "yyyy-MM-dd"),
+          followers: Math.floor(1000 + Math.random() * 500 + i * 100),
+          views: Math.floor(5000 + Math.random() * 3000 + i * 500),
+          likes: Math.floor(200 + Math.random() * 100 + i * 20),
+          comments: Math.floor(50 + Math.random() * 30 + i * 5),
+          engagement_rate: parseFloat((3 + Math.random() * 2).toFixed(2)),
+          platform: "all",
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["growth_stats"] });
+      toast.success("Sample data added!");
+    },
+    onError: () => {
+      toast.error("Failed to add sample data");
+    },
+  });
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast.success("Signed out successfully");
+    navigate("/");
+  };
 
   const handleDeleteContent = (id: string) => {
-    setSavedContent((prev) => prev.filter((item) => item.id !== id));
-    toast.success("Content deleted");
+    deleteContentMutation.mutate(id);
   };
 
   const handleViewContent = (id: string) => {
     toast.info("Opening content...");
   };
+
+  // Format saved content for display
+  const formattedContent = savedContent.map((item) => ({
+    id: item.id,
+    type: item.type as "script" | "tags" | "ideas" | "plan",
+    title: item.title,
+    preview: item.preview || item.content.substring(0, 100) + "...",
+    createdAt: new Date(item.created_at).toLocaleDateString(),
+  }));
+
+  // Format growth data for chart
+  const chartData = growthStats.map((stat) => ({
+    date: format(new Date(stat.date), "MMM d"),
+    followers: stat.followers || 0,
+    views: Math.round((stat.views || 0) / 1000),
+  }));
+
+  // Format activity for display
+  const formattedActivity = activityLog.map((item) => ({
+    id: item.id,
+    type: item.type as "follower" | "view" | "like" | "comment" | "share" | "milestone",
+    message: item.message,
+    time: new Date(item.created_at).toLocaleDateString(),
+  }));
+
+  // Calculate totals
+  const latestStats = growthStats[growthStats.length - 1];
+  const previousStats = growthStats[growthStats.length - 2];
+
+  const totalFollowers = latestStats?.followers || 0;
+  const totalViews = latestStats?.views || 0;
+  const engagementRate = latestStats?.engagement_rate || 0;
+
+  const followerChange = previousStats
+    ? (((totalFollowers - previousStats.followers!) / previousStats.followers!) * 100).toFixed(1)
+    : "0";
+  const viewChange = previousStats
+    ? (((totalViews - previousStats.views!) / previousStats.views!) * 100).toFixed(1)
+    : "0";
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" />
+      </div>
+    );
+  }
 
   return (
     <div className="px-4 py-6 space-y-6">
@@ -121,6 +180,9 @@ export const DashboardPage = () => {
           <h1 className="text-xl font-bold text-foreground">Creator Dashboard</h1>
           <p className="text-sm text-muted-foreground">Track your growth</p>
         </div>
+        <Button variant="ghost" size="icon" onClick={handleSignOut}>
+          <LogOut className="h-5 w-5" />
+        </Button>
         <div className="p-2 rounded-lg gradient-primary">
           <BarChart3 className="h-5 w-5 text-foreground" />
         </div>
@@ -152,35 +214,50 @@ export const DashboardPage = () => {
             <AnalyticsCard
               icon={Users}
               label="Total Followers"
-              value="2,450"
-              change="+12.5%"
-              changeType="positive"
+              value={totalFollowers.toLocaleString()}
+              change={`${Number(followerChange) >= 0 ? "+" : ""}${followerChange}%`}
+              changeType={Number(followerChange) >= 0 ? "positive" : "negative"}
             />
             <AnalyticsCard
               icon={Eye}
               label="Total Views"
-              value="92K"
-              change="+8.2%"
-              changeType="positive"
+              value={totalViews.toLocaleString()}
+              change={`${Number(viewChange) >= 0 ? "+" : ""}${viewChange}%`}
+              changeType={Number(viewChange) >= 0 ? "positive" : "negative"}
             />
             <AnalyticsCard
               icon={ThumbsUp}
               label="Engagement Rate"
-              value="4.8%"
-              change="+0.3%"
-              changeType="positive"
+              value={`${engagementRate}%`}
+              change="This month"
+              changeType="neutral"
             />
             <AnalyticsCard
               icon={TrendingUp}
-              label="Growth Rate"
-              value="16.7%"
-              change="This month"
+              label="Saved Content"
+              value={savedContent.length.toString()}
+              change="items"
               changeType="neutral"
             />
           </div>
 
           {/* Growth Chart */}
-          <GrowthChart data={mockGrowthData} title="Growth Over Time" />
+          {chartData.length > 0 ? (
+            <GrowthChart data={chartData} title="Growth Over Time" />
+          ) : (
+            <Card variant="gradient" className="p-6 text-center">
+              <TrendingUp className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+              <p className="text-muted-foreground mb-4">No growth data yet</p>
+              <Button
+                variant="gradient"
+                onClick={() => addSampleDataMutation.mutate()}
+                disabled={addSampleDataMutation.isPending}
+              >
+                <Plus className="h-4 w-4" />
+                Add Sample Data
+              </Button>
+            </Card>
+          )}
 
           {/* Quick Insights */}
           <Card variant="glow" className="p-5">
@@ -192,13 +269,13 @@ export const DashboardPage = () => {
             </div>
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">
-                📈 <span className="text-foreground">Best performing day:</span> Saturday (+23% views)
+                📈 <span className="text-foreground">Content saved:</span> {savedContent.length} items
               </p>
               <p className="text-sm text-muted-foreground">
-                ⏰ <span className="text-foreground">Peak engagement time:</span> 6-8 PM
+                ⏰ <span className="text-foreground">Data points:</span> {growthStats.length} records
               </p>
               <p className="text-sm text-muted-foreground">
-                🎯 <span className="text-foreground">Top content type:</span> Tutorial videos
+                🎯 <span className="text-foreground">Activities logged:</span> {activityLog.length} events
               </p>
             </div>
           </Card>
@@ -214,14 +291,20 @@ export const DashboardPage = () => {
               <h2 className="font-semibold text-foreground">Saved Content</h2>
             </div>
             <span className="text-sm text-muted-foreground">
-              {savedContent.length} items
+              {formattedContent.length} items
             </span>
           </div>
-          <SavedContentList
-            content={savedContent}
-            onDelete={handleDeleteContent}
-            onView={handleViewContent}
-          />
+          {contentLoading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full" />
+            </div>
+          ) : (
+            <SavedContentList
+              content={formattedContent}
+              onDelete={handleDeleteContent}
+              onView={handleViewContent}
+            />
+          )}
         </div>
       )}
 
@@ -232,21 +315,27 @@ export const DashboardPage = () => {
             <TrendingUp className="h-5 w-5 text-primary" />
             <h2 className="font-semibold text-foreground">Recent Activity</h2>
           </div>
-          <ActivityFeed activities={mockActivities} />
+          {activityLoading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full" />
+            </div>
+          ) : (
+            <ActivityFeed activities={formattedActivity} />
+          )}
 
           {/* Milestones */}
           <Card variant="gradient" className="p-5">
             <h3 className="font-semibold text-foreground mb-4">Milestones</h3>
             <div className="space-y-3">
               {[
-                { target: 5000, current: 2450, label: "Next: 5K Followers" },
-                { target: 100000, current: 92000, label: "Next: 100K Views" },
+                { target: 5000, current: totalFollowers, label: "Next: 5K Followers" },
+                { target: 100000, current: totalViews, label: "Next: 100K Views" },
               ].map((milestone, index) => (
                 <div key={index} className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">{milestone.label}</span>
                     <span className="text-foreground font-medium">
-                      {Math.round((milestone.current / milestone.target) * 100)}%
+                      {Math.min(Math.round((milestone.current / milestone.target) * 100), 100)}%
                     </span>
                   </div>
                   <div className="h-2 bg-muted rounded-full overflow-hidden">

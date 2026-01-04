@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SplashScreen } from "@/pages/SplashScreen";
 import { HomePage } from "@/pages/HomePage";
@@ -11,6 +12,7 @@ import { ToolsPage } from "@/pages/ToolsPage";
 import { TipsPage } from "@/pages/TipsPage";
 import { ServicesPage } from "@/pages/ServicesPage";
 import { DashboardPage } from "@/pages/DashboardPage";
+import { AuthPage } from "@/pages/AuthPage";
 import { TagGeneratorPage } from "@/pages/tools/TagGeneratorPage";
 import { ScriptGeneratorPage } from "@/pages/tools/ScriptGeneratorPage";
 import { TextToScriptPage } from "@/pages/tools/TextToScriptPage";
@@ -26,29 +28,32 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
-        <BrowserRouter>
-          <AppLayout>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/tools" element={<ToolsPage />} />
-              <Route path="/tips" element={<TipsPage />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/tools/tags" element={<TagGeneratorPage />} />
-              <Route path="/tools/script" element={<ScriptGeneratorPage />} />
-              <Route path="/tools/text-script" element={<TextToScriptPage />} />
-              <Route path="/tools/shorts-ideas" element={<ShortsIdeasPage />} />
-              <Route path="/tools/planner" element={<YouTubePlannerPage />} />
-              <Route path="/tools/growth-calc" element={<GrowthCalculatorPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AppLayout>
-        </BrowserRouter>
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+          <BrowserRouter>
+            <AppLayout>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/tools" element={<ToolsPage />} />
+                <Route path="/tips" element={<TipsPage />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/tools/tags" element={<TagGeneratorPage />} />
+                <Route path="/tools/script" element={<ScriptGeneratorPage />} />
+                <Route path="/tools/text-script" element={<TextToScriptPage />} />
+                <Route path="/tools/shorts-ideas" element={<ShortsIdeasPage />} />
+                <Route path="/tools/planner" element={<YouTubePlannerPage />} />
+                <Route path="/tools/growth-calc" element={<GrowthCalculatorPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AppLayout>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 };
