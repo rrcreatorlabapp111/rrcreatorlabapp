@@ -29,8 +29,12 @@ interface VideoData {
   duration: string;
 }
 
-function extractChannelId(input: string): { type: "id" | "username" | "handle"; value: string } | null {
+function extractChannelId(input: string): { type: "id" | "username" | "handle" | "search"; value: string } | null {
   const trimmed = input.trim();
+  
+  if (!trimmed || trimmed.length < 2) {
+    return null;
+  }
   
   // Direct channel ID (starts with UC)
   if (/^UC[\w-]{22}$/.test(trimmed)) {
@@ -55,9 +59,14 @@ function extractChannelId(input: string): { type: "id" | "username" | "handle"; 
     return { type: "username", value: customMatch[1] };
   }
   
-  // Just a username
+  // Just a username (no spaces)
   if (/^[\w.-]+$/.test(trimmed) && trimmed.length > 2) {
     return { type: "username", value: trimmed };
+  }
+  
+  // Channel name search (allows spaces and special characters)
+  if (trimmed.length >= 2) {
+    return { type: "search", value: trimmed };
   }
   
   return null;
@@ -99,8 +108,9 @@ serve(async (req) => {
         channelId = searchData.items[0].snippet.channelId;
       }
     } else {
-      // Search by username/custom URL
-      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${parsed.value}&key=${YOUTUBE_API_KEY}`;
+      // Search by username/custom URL or channel name
+      const searchQuery = encodeURIComponent(parsed.value);
+      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${searchQuery}&key=${YOUTUBE_API_KEY}`;
       const searchRes = await fetch(searchUrl);
       const searchData = await searchRes.json();
       
