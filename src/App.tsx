@@ -16,6 +16,7 @@ import { DashboardPage } from "@/pages/DashboardPage";
 import { AuthPage } from "@/pages/AuthPage";
 import { ProfilePage } from "@/pages/ProfilePage";
 import { AdminPage } from "@/pages/AdminPage";
+import { TeamPage } from "@/pages/TeamPage";
 import { TutorialsPage } from "@/pages/TutorialsPage";
 import { YouTubeAssistantPage } from "@/pages/YouTubeAssistantPage";
 import { OnboardingPage } from "@/pages/OnboardingPage";
@@ -74,6 +75,7 @@ const App = () => {
                   <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/admin" element={<AdminPage />} />
+                  <Route path="/team" element={<TeamPage />} />
                   <Route path="/tutorials" element={<TutorialsPage />} />
                   <Route path="/youtube-assistant" element={<YouTubeAssistantPage />} />
                   <Route path="/tools" element={<ToolsPage />} />

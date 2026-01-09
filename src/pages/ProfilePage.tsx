@@ -7,12 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdmin } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { AdminNav } from "@/components/admin/AdminNav";
 
 export const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
   const { toast } = useToast();
   
   const [displayName, setDisplayName] = useState("");
@@ -142,6 +145,9 @@ export const ProfilePage = () => {
 
   return (
     <div className="px-4 py-6 space-y-6">
+      {/* Admin Navigation */}
+      {isAdmin && <AdminNav />}
+
       {/* Header */}
       <div className="flex items-center gap-3 animate-fade-in">
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
