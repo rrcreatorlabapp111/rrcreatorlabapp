@@ -55,17 +55,14 @@ export const TeamPage = () => {
   const [permissions, setPermissions] = useState<string[]>(["view_dashboard", "view_tutorials"]);
 
   useEffect(() => {
-    if (!authLoading && !adminLoading) {
+    if (!authLoading) {
       if (!user) {
         navigate("/auth");
-      } else if (!isAdmin) {
-        toast.error("Admin access required");
-        navigate("/");
       } else {
         fetchTeamMembers();
       }
     }
-  }, [user, authLoading, isAdmin, adminLoading, navigate]);
+  }, [user, authLoading, navigate]);
 
   const fetchTeamMembers = async () => {
     try {
@@ -196,7 +193,7 @@ export const TeamPage = () => {
     }
   };
 
-  if (authLoading || adminLoading || loading) {
+  if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -216,13 +213,14 @@ export const TeamPage = () => {
             <h1 className="text-2xl font-bold">Our Team</h1>
             <p className="text-muted-foreground text-sm">Manage your team members and permissions</p>
           </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <UserPlus className="h-4 w-4" />
-                Invite Member
-              </Button>
-            </DialogTrigger>
+          {isAdmin && (
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="gap-2">
+                  <UserPlus className="h-4 w-4" />
+                  Invite Member
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>Invite Team Member</DialogTitle>
@@ -301,6 +299,7 @@ export const TeamPage = () => {
               </form>
             </DialogContent>
           </Dialog>
+          )}
         </div>
 
         {/* Stats Cards */}
@@ -379,25 +378,27 @@ export const TeamPage = () => {
                         <p className="text-xs text-muted-foreground">{member.position}</p>
                       )}
                     </div>
-                    <div className="flex items-center gap-2">
-                      {member.status === "pending" && (
+                    {isAdmin && (
+                      <div className="flex items-center gap-2">
+                        {member.status === "pending" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleUpdateStatus(member.id, "active")}
+                          >
+                            Activate
+                          </Button>
+                        )}
                         <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleUpdateStatus(member.id, "active")}
+                          size="icon"
+                          variant="ghost"
+                          className="text-destructive hover:text-destructive"
+                          onClick={() => handleDeleteMember(member.id, member.name)}
                         >
-                          Activate
+                          <Trash2 className="h-4 w-4" />
                         </Button>
-                      )}
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-destructive hover:text-destructive"
-                        onClick={() => handleDeleteMember(member.id, member.name)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
