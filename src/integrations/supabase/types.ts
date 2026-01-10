@@ -38,6 +38,54 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      admin_settings: {
+        Row: {
+          id: string
+          setting_key: string
+          setting_value: string
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          id?: string
+          setting_key: string
+          setting_value: string
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          id?: string
+          setting_key?: string
+          setting_value?: string
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       growth_stats: {
         Row: {
           comments: number | null
@@ -157,6 +205,7 @@ export type Database = {
           permissions: Json | null
           position: string | null
           role: string
+          skills: string[] | null
           status: string
           updated_at: string
           user_id: string
@@ -171,6 +220,7 @@ export type Database = {
           permissions?: Json | null
           position?: string | null
           role?: string
+          skills?: string[] | null
           status?: string
           updated_at?: string
           user_id: string
@@ -185,6 +235,7 @@ export type Database = {
           permissions?: Json | null
           position?: string | null
           role?: string
+          skills?: string[] | null
           status?: string
           updated_at?: string
           user_id?: string
