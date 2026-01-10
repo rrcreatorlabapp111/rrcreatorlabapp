@@ -189,6 +189,7 @@ export const TeamPage = () => {
     switch (role) {
       case "admin": return "bg-destructive/10 text-destructive";
       case "moderator": return "bg-blue-500/10 text-blue-500";
+      case "employee": return "bg-purple-500/10 text-purple-500";
       default: return "bg-secondary text-secondary-foreground";
     }
   };
@@ -263,6 +264,7 @@ export const TeamPage = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="employee">Employee</SelectItem>
                       <SelectItem value="member">Member</SelectItem>
                       <SelectItem value="moderator">Moderator</SelectItem>
                       <SelectItem value="admin">Admin</SelectItem>
