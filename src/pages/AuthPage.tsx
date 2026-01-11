@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles, Mail, Lock, User, ArrowLeft } from "lucide-react";
+import { Sparkles, Mail, Lock, User, ArrowLeft, Key } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const emailSchema = z.string().email("Please enter a valid email");
 const passwordSchema = z.string().min(6, "Password must be at least 6 characters");
@@ -19,6 +20,7 @@ export const AuthPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [signupCode, setSignupCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const validateInputs = () => {
@@ -33,6 +35,31 @@ export const AuthPage = () => {
       passwordSchema.parse(password);
     } catch {
       toast.error("Password must be at least 6 characters");
+      return false;
+    }
+
+    return true;
+  };
+
+  const validateSignupCode = async (): Promise<boolean> => {
+    if (!signupCode.trim()) {
+      toast.error("Signup code is required");
+      return false;
+    }
+
+    const { data, error } = await supabase
+      .from("admin_settings")
+      .select("setting_value")
+      .eq("setting_key", "signup_code")
+      .single();
+
+    if (error || !data) {
+      toast.error("Unable to verify signup code. Please try again.");
+      return false;
+    }
+
+    if (data.setting_value !== signupCode.trim()) {
+      toast.error("Invalid signup code. Please contact an admin.");
       return false;
     }
 
@@ -60,6 +87,13 @@ export const AuthPage = () => {
           navigate("/");
         }
       } else {
+        // Validate signup code before allowing signup
+        const isValidCode = await validateSignupCode();
+        if (!isValidCode) {
+          setIsLoading(false);
+          return;
+        }
+
         const { error } = await signUp(email, password, displayName);
         if (error) {
           if (error.message.includes("already registered")) {
@@ -101,20 +135,41 @@ export const AuthPage = () => {
       <Card variant="gradient" className="w-full max-w-sm p-6 animate-slide-up">
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
-            <div className="space-y-2">
-              <Label htmlFor="name">Display Name</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Your name"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="pl-10 bg-muted border-border"
-                />
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="signupCode">Signup Code *</Label>
+                <div className="relative">
+                  <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="signupCode"
+                    type="text"
+                    placeholder="Enter signup code"
+                    value={signupCode}
+                    onChange={(e) => setSignupCode(e.target.value)}
+                    className="pl-10 bg-muted border-border"
+                    required
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Contact an admin to get your signup code
+                </p>
               </div>
-            </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="name">Display Name</Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="Your name"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className="pl-10 bg-muted border-border"
+                  />
+                </div>
+              </div>
+            </>
           )}
 
           <div className="space-y-2">
