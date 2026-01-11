@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { PricingCard } from "@/components/services/PricingCard";
+import { PlanComparisonTable } from "@/components/services/PlanComparisonTable";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Search, Image, Mail, Phone, Instagram, Video, FileText, Globe, Bot, Sparkles, BookOpen, Wrench } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ExternalLink, Search, Image, Mail, Phone, Instagram, Video, FileText, Globe, Bot, Sparkles, BookOpen, Wrench, LayoutGrid, Table } from "lucide-react";
 
 const GOOGLE_FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLSc7w7_crTXDPXa1Rz_2OOkAX7k_5jq88dEdLr8KiiaICcGh5g/viewform";
 
@@ -151,6 +154,8 @@ const oneTimeServices = [
 ];
 
 export const ServicesPage = () => {
+  const [viewMode, setViewMode] = useState<"cards" | "compare">("cards");
+
   const handleContact = () => {
     window.open(GOOGLE_FORM_LINK, "_blank");
   };
@@ -164,24 +169,47 @@ export const ServicesPage = () => {
 
       {/* Monthly Plans */}
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-foreground">Monthly Plans</h2>
-        {plans.map((plan, index) => (
-          <div
-            key={plan.title}
-            className="animate-slide-up"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <PricingCard
-              title={plan.title}
-              price={plan.price}
-              features={plan.features}
-              buttonText={plan.buttonText}
-              isPopular={plan.isPopular}
-              bestFor={plan.bestFor}
-              onContact={handleContact}
-            />
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-foreground">Monthly Plans</h2>
+          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "cards" | "compare")}>
+            <TabsList className="h-8">
+              <TabsTrigger value="cards" className="text-xs px-2 h-6">
+                <LayoutGrid className="h-3 w-3 mr-1" />
+                Cards
+              </TabsTrigger>
+              <TabsTrigger value="compare" className="text-xs px-2 h-6">
+                <Table className="h-3 w-3 mr-1" />
+                Compare
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+
+        {viewMode === "cards" ? (
+          <>
+            {plans.map((plan, index) => (
+              <div
+                key={plan.title}
+                className="animate-slide-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <PricingCard
+                  title={plan.title}
+                  price={plan.price}
+                  features={plan.features}
+                  buttonText={plan.buttonText}
+                  isPopular={plan.isPopular}
+                  bestFor={plan.bestFor}
+                  onContact={handleContact}
+                />
+              </div>
+            ))}
+          </>
+        ) : (
+          <div className="animate-fade-in">
+            <PlanComparisonTable onContact={handleContact} />
           </div>
-        ))}
+        )}
       </div>
 
       {/* Additional Packages */}
