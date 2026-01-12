@@ -1,1 +1,10 @@
 project_id = "quhnzugdahbgdsusgwvh"
+
+[functions.youtube-channel]
+verify_jwt = false
+
+[functions.youtube-suggestions]
+verify_jwt = false
+
+[functions.ai-generator]
+verify_jwt = false
