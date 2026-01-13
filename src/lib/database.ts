@@ -6,6 +6,40 @@ export type SavedContentInsert = TablesInsert<"saved_content">;
 export type GrowthStats = Tables<"growth_stats">;
 export type ActivityLog = Tables<"activity_log">;
 
+// Content Calendar types
+export interface ContentCalendarItem {
+  id: string;
+  user_id: string;
+  title: string;
+  content: string | null;
+  content_type: string;
+  platform: string;
+  scheduled_date: string;
+  scheduled_time: string | null;
+  status: string;
+  priority: string;
+  tags: string[];
+  notes: string | null;
+  source_tool: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ContentCalendarInsert {
+  user_id: string;
+  title: string;
+  content?: string | null;
+  content_type?: string;
+  platform?: string;
+  scheduled_date: string;
+  scheduled_time?: string | null;
+  status?: string;
+  priority?: string;
+  tags?: string[];
+  notes?: string | null;
+  source_tool?: string | null;
+}
+
 // Saved Content functions
 export const getSavedContent = async (userId: string) => {
   const { data, error } = await supabase
@@ -84,4 +118,50 @@ export const addActivityLog = async (activity: TablesInsert<"activity_log">) => 
 
   if (error) throw error;
   return data;
+};
+
+// Content Calendar functions
+export const getContentCalendar = async (userId: string, startDate: string, endDate: string) => {
+  const { data, error } = await supabase
+    .from("content_calendar")
+    .select("*")
+    .eq("user_id", userId)
+    .gte("scheduled_date", startDate)
+    .lte("scheduled_date", endDate)
+    .order("scheduled_date", { ascending: true });
+
+  if (error) throw error;
+  return data as ContentCalendarItem[];
+};
+
+export const addContentCalendarItem = async (item: ContentCalendarInsert) => {
+  const { data, error } = await supabase
+    .from("content_calendar")
+    .insert(item)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const updateContentCalendarItem = async (id: string, updates: Partial<ContentCalendarInsert>) => {
+  const { data, error } = await supabase
+    .from("content_calendar")
+    .update(updates)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const deleteContentCalendarItem = async (id: string) => {
+  const { error } = await supabase
+    .from("content_calendar")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw error;
 };

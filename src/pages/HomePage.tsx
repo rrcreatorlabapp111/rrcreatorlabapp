@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FileText, Lightbulb, ExternalLink, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame, Settings, TrendingUp, Users, Zap, Star, Quote } from "lucide-react";
+import { FileText, Lightbulb, ExternalLink, Sparkles, BarChart3, ChevronRight, User, LogIn, ArrowRight, Hash, Search, Flame, Settings, TrendingUp, Users, Zap, Star, Quote, Calendar, Youtube, Bot, Target, Rocket, Award } from "lucide-react";
 import { QuickActionButton } from "@/components/home/QuickActionButton";
 import { TutorialSection } from "@/components/home/TutorialSection";
 import { Card } from "@/components/ui/card";
@@ -12,14 +12,21 @@ const GOOGLE_FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLSc7w7_crTXDPX
 
 const quickActions = [
   { icon: FileText, label: "Script Generator", path: "/tools/script" },
-  { icon: Lightbulb, label: "Short Ideas", path: "/tools/shorts-ideas" },
+  { icon: Calendar, label: "Content Calendar", path: "/content-calendar" },
   { icon: ExternalLink, label: "Contact Us", path: GOOGLE_FORM_LINK, external: true },
 ];
 
 const recommendedTools = [
   { icon: Hash, title: "Tag Generator", description: "Optimize your reach", path: "/tools/tags" },
-  { icon: Search, title: "SEO Score", description: "Improve discoverability", path: "/tools/seo" },
+  { icon: Bot, title: "YT Assistant", description: "AI-powered insights", path: "/youtube-assistant" },
   { icon: Flame, title: "Trending Topics", description: "Catch viral waves", path: "/tools/trending" },
+  { icon: Search, title: "SEO Score", description: "Improve discoverability", path: "/tools/seo" },
+];
+
+const featuredServices = [
+  { icon: Target, title: "Channel Audit", description: "Get expert analysis", badge: "Popular" },
+  { icon: Rocket, title: "Growth Package", description: "Accelerate your growth", badge: "Best Value" },
+  { icon: Award, title: "Complete Toolkit", description: "Everything you need", badge: "New" },
 ];
 
 const testimonials = [
@@ -53,25 +60,36 @@ export const HomePage = () => {
   return (
     <div className="px-4 py-6 space-y-6">
       {/* Hero Section */}
-      <div className="text-center space-y-3 pt-4 animate-fade-in">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 border border-border/50">
-          <Sparkles className="h-4 w-4 text-primary" />
+      <div className="text-center space-y-4 pt-4 animate-fade-in">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-primary/30">
+          <Sparkles className="h-4 w-4 text-primary animate-pulse" />
           <span className="text-sm text-muted-foreground">Creator Growth Platform</span>
         </div>
-        <h1 className="text-3xl font-bold gradient-text">RR Creator Labs</h1>
-        <p className="text-muted-foreground text-lg">
+        <h1 className="text-4xl font-bold font-display gradient-text leading-tight">RR Creator Labs</h1>
+        <p className="text-muted-foreground text-lg max-w-sm mx-auto">
           Grow Your Content. Build Your Brand.
         </p>
         {/* Primary CTA */}
-        <Button
-          variant="gradient"
-          size="xl"
-          className="mt-4 w-full max-w-xs"
-          onClick={() => navigate("/tools")}
-        >
-          Start Creating
-          <ArrowRight className="h-5 w-5" />
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+          <Button
+            variant="gradient"
+            size="xl"
+            className="w-full sm:w-auto animate-pulse-glow"
+            onClick={() => navigate("/tools")}
+          >
+            Start Creating
+            <ArrowRight className="h-5 w-5" />
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            className="w-full sm:w-auto border-primary/30 hover:border-primary/60"
+            onClick={() => navigate("/content-calendar")}
+          >
+            <Calendar className="h-4 w-4 mr-2" />
+            Content Calendar
+          </Button>
+        </div>
       </div>
 
       {/* Auth Card - Show for logged out users */}
@@ -250,19 +268,55 @@ export const HomePage = () => {
         </div>
       </div>
 
+      {/* Featured Services */}
+      <div className="space-y-3 animate-slide-up" style={{ animationDelay: "0.23s" }}>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-foreground font-display">Premium Services</h2>
+          <Button variant="ghost" size="sm" onClick={() => navigate("/services")} className="text-primary">
+            View all
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 gap-2">
+          {featuredServices.map((service) => (
+            <Card 
+              key={service.title} 
+              variant="gradient" 
+              className="p-3 cursor-pointer hover:border-primary/50 transition-all duration-300 border-gradient"
+              onClick={() => navigate("/services")}
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg gradient-primary">
+                  <service.icon className="h-4 w-4 text-foreground" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-medium text-foreground">{service.title}</h3>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary/20 text-primary">{service.badge}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{service.description}</p>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
       {/* Tutorials Section */}
       <TutorialSection />
 
       {/* Why Choose Us Section */}
       <div className="space-y-3 animate-slide-up" style={{ animationDelay: "0.25s" }}>
-        <h2 className="text-lg font-semibold text-foreground">Why Creators Love Us</h2>
+        <h2 className="text-lg font-semibold text-foreground font-display">Why Creators Love Us</h2>
         <div className="grid grid-cols-1 gap-2">
           {[
             { icon: Zap, title: "AI-Powered Tools", desc: "Generate scripts, tags & ideas instantly" },
+            { icon: Calendar, title: "Content Calendar", desc: "Plan & schedule your content weeks ahead" },
             { icon: TrendingUp, title: "Data-Driven Growth", desc: "Track what works and scale faster" },
             { icon: Users, title: "Expert Support", desc: "Get help from real content creators" },
           ].map((item) => (
-            <Card key={item.title} variant="gradient" className="p-3">
+            <Card key={item.title} variant="gradient" className="p-3 border-gradient">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-primary/20">
                   <item.icon className="h-4 w-4 text-primary" />
@@ -319,15 +373,36 @@ export const HomePage = () => {
       <div className="grid grid-cols-3 gap-3 animate-slide-up" style={{ animationDelay: "0.35s" }}>
         {[
           { value: "14+", label: "AI Tools" },
-          { value: "100+", label: "Creators" },
+          { value: "500+", label: "Creators" },
           { value: "24/7", label: "Support" },
         ].map((stat) => (
-          <Card key={stat.label} variant="gradient" className="p-4 text-center">
-            <p className="text-2xl font-bold gradient-text">{stat.value}</p>
+          <Card key={stat.label} variant="gradient" className="p-4 text-center border-gradient">
+            <p className="text-2xl font-bold font-display gradient-text">{stat.value}</p>
             <p className="text-xs text-muted-foreground">{stat.label}</p>
           </Card>
         ))}
       </div>
+
+      {/* Content Calendar Promo */}
+      <Card 
+        variant="glow" 
+        className="p-4 cursor-pointer hover:shadow-glow transition-all duration-300 animate-slide-up border-gradient" 
+        style={{ animationDelay: "0.4s" }}
+        onClick={() => navigate("/content-calendar")}
+      >
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl gradient-primary animate-pulse">
+            <Calendar className="h-6 w-6 text-foreground" />
+          </div>
+          <div className="flex-1">
+            <h2 className="font-semibold text-foreground font-display">Content Calendar</h2>
+            <p className="text-sm text-muted-foreground">
+              Schedule & organize your content ideas
+            </p>
+          </div>
+          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+        </div>
+      </Card>
     </div>
   );
 };
