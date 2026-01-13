@@ -20,6 +20,7 @@ import { TeamPage } from "@/pages/TeamPage";
 import { TutorialsPage } from "@/pages/TutorialsPage";
 import { YouTubeAssistantPage } from "@/pages/YouTubeAssistantPage";
 import { OnboardingPage } from "@/pages/OnboardingPage";
+import { ContentCalendarPage } from "@/pages/ContentCalendarPage";
 import { TagGeneratorPage } from "@/pages/tools/TagGeneratorPage";
 import { ScriptGeneratorPage } from "@/pages/tools/ScriptGeneratorPage";
 import { TextToScriptPage } from "@/pages/tools/TextToScriptPage";
@@ -78,6 +79,7 @@ const App = () => {
                   <Route path="/team" element={<TeamPage />} />
                   <Route path="/tutorials" element={<TutorialsPage />} />
                   <Route path="/youtube-assistant" element={<YouTubeAssistantPage />} />
+                  <Route path="/content-calendar" element={<ContentCalendarPage />} />
                   <Route path="/tools" element={<ToolsPage />} />
                   <Route path="/tips" element={<TipsPage />} />
                   <Route path="/services" element={<ServicesPage />} />

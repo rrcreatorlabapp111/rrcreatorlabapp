@@ -86,6 +86,60 @@ export type Database = {
         }
         Relationships: []
       }
+      content_calendar: {
+        Row: {
+          content: string | null
+          content_type: string
+          created_at: string
+          id: string
+          notes: string | null
+          platform: string | null
+          priority: string | null
+          scheduled_date: string
+          scheduled_time: string | null
+          source_tool: string | null
+          status: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          content_type?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          platform?: string | null
+          priority?: string | null
+          scheduled_date: string
+          scheduled_time?: string | null
+          source_tool?: string | null
+          status?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string | null
+          content_type?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          platform?: string | null
+          priority?: string | null
+          scheduled_date?: string
+          scheduled_time?: string | null
+          source_tool?: string | null
+          status?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       growth_stats: {
         Row: {
           comments: number | null
