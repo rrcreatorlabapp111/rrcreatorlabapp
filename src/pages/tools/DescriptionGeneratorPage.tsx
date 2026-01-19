@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+
 
 export const DescriptionGeneratorPage = () => {
   const navigate = useNavigate();
@@ -27,18 +27,66 @@ export const DescriptionGeneratorPage = () => {
     setDescription("");
 
     try {
-      const response = await supabase.functions.invoke("ai-generator", {
-        body: {
-          type: "video-description",
-          title,
-          keywords,
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-generator`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            type: "description-gen",
+            data: { topic: title, keywords },
+          }),
+        }
+      );
 
-      if (response.error) throw response.error;
+      if (!response.ok) {
+        if (response.status === 429) {
+          toast.error("Rate limit exceeded. Please try again later.");
+          return;
+        }
+        if (response.status === 402) {
+          toast.error("Credits exhausted. Please add more credits.");
+          return;
+        }
+        throw new Error("Failed to generate description");
+      }
 
-      const rawContent = response.data?.content || response.data?.generatedText || "";
-      setDescription(rawContent);
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error("No response body");
+
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let fullContent = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            const jsonStr = line.slice(6).trim();
+            if (jsonStr === "[DONE]") continue;
+            try {
+              const parsed = JSON.parse(jsonStr);
+              const content = parsed.choices?.[0]?.delta?.content;
+              if (content) {
+                fullContent += content;
+                setDescription(fullContent);
+              }
+            } catch {
+              // Ignore parse errors
+            }
+          }
+        }
+      }
+
       toast.success("Description generated!");
     } catch (error: any) {
       console.error("Error generating description:", error);
