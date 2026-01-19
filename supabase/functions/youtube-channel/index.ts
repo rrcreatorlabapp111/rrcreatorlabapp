@@ -99,20 +99,34 @@ serve(async (req) => {
     if (parsed.type === "id") {
       channelId = parsed.value;
     } else if (parsed.type === "handle") {
-      // Search by handle
-      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=@${parsed.value}&key=${YOUTUBE_API_KEY}`;
-      const searchRes = await fetch(searchUrl);
-      const searchData = await searchRes.json();
+      // Try using forHandle parameter first (more reliable)
+      const handleUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet&forHandle=@${parsed.value}&key=${YOUTUBE_API_KEY}`;
+      console.log("Fetching by handle:", handleUrl.replace(YOUTUBE_API_KEY, "***"));
+      const handleRes = await fetch(handleUrl);
+      const handleData = await handleRes.json();
       
-      if (searchData.items && searchData.items.length > 0) {
-        channelId = searchData.items[0].snippet.channelId;
+      if (handleData.items && handleData.items.length > 0) {
+        channelId = handleData.items[0].id;
+      } else {
+        // Fallback to search
+        console.log("Handle lookup failed, falling back to search");
+        const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=@${parsed.value}&maxResults=5&key=${YOUTUBE_API_KEY}`;
+        const searchRes = await fetch(searchUrl);
+        const searchData = await searchRes.json();
+        console.log("Search results:", JSON.stringify(searchData));
+        
+        if (searchData.items && searchData.items.length > 0) {
+          channelId = searchData.items[0].snippet.channelId;
+        }
       }
     } else {
       // Search by username/custom URL or channel name
       const searchQuery = encodeURIComponent(parsed.value);
-      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${searchQuery}&key=${YOUTUBE_API_KEY}`;
+      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${searchQuery}&maxResults=5&key=${YOUTUBE_API_KEY}`;
+      console.log("Searching for:", searchQuery);
       const searchRes = await fetch(searchUrl);
       const searchData = await searchRes.json();
+      console.log("Search results:", JSON.stringify(searchData));
       
       if (searchData.items && searchData.items.length > 0) {
         channelId = searchData.items[0].snippet.channelId;
