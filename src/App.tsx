@@ -18,7 +18,6 @@ import { ProfilePage } from "@/pages/ProfilePage";
 import { AdminPage } from "@/pages/AdminPage";
 import { TeamPage } from "@/pages/TeamPage";
 import { TutorialsPage } from "@/pages/TutorialsPage";
-import { YouTubeAssistantPage } from "@/pages/YouTubeAssistantPage";
 import { OnboardingPage } from "@/pages/OnboardingPage";
 import { ContentCalendarPage } from "@/pages/ContentCalendarPage";
 import { TagGeneratorPage } from "@/pages/tools/TagGeneratorPage";
@@ -50,6 +49,10 @@ import { IGContentCalendarPage } from "@/pages/tools/IGContentCalendarPage";
 import { IGHookGeneratorPage } from "@/pages/tools/IGHookGeneratorPage";
 import { IGGrowthStrategyPage } from "@/pages/tools/IGGrowthStrategyPage";
 import { IGMonetizationPage } from "@/pages/tools/IGMonetizationPage";
+import { CarouselPlannerPage } from "@/pages/tools/CarouselPlannerPage";
+import { ContentPillarsPage } from "@/pages/tools/ContentPillarsPage";
+import { CollabIdeasPage } from "@/pages/tools/CollabIdeasPage";
+import { ReachEstimatorPage } from "@/pages/tools/ReachEstimatorPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -92,7 +95,6 @@ const App = () => {
                   <Route path="/admin" element={<AdminPage />} />
                   <Route path="/team" element={<TeamPage />} />
                   <Route path="/tutorials" element={<TutorialsPage />} />
-                  <Route path="/youtube-assistant" element={<YouTubeAssistantPage />} />
                   <Route path="/content-calendar" element={<ContentCalendarPage />} />
                   <Route path="/tools" element={<ToolsPage />} />
                   <Route path="/tips" element={<TipsPage />} />
@@ -128,6 +130,10 @@ const App = () => {
                   <Route path="/tools/ig-hooks" element={<IGHookGeneratorPage />} />
                   <Route path="/tools/ig-growth" element={<IGGrowthStrategyPage />} />
                   <Route path="/tools/ig-monetization" element={<IGMonetizationPage />} />
+                  <Route path="/tools/carousel-planner" element={<CarouselPlannerPage />} />
+                  <Route path="/tools/content-pillars" element={<ContentPillarsPage />} />
+                  <Route path="/tools/collab-ideas" element={<CollabIdeasPage />} />
+                  <Route path="/tools/reach-estimator" element={<ReachEstimatorPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </AppLayout>
