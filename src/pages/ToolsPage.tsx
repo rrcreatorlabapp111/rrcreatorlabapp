@@ -381,57 +381,8 @@ export const ToolsPage = () => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="youtube" className="mt-4 space-y-4">
-          {/* Featured: YouTube Assistant */}
-          <Card 
-            className="relative overflow-hidden cursor-pointer border-destructive/30 bg-gradient-to-br from-destructive/10 to-destructive/5 hover:border-destructive/50 hover:shadow-glow transition-all animate-fade-in"
-            onClick={() => navigate("/youtube-assistant")}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-destructive/20">
-                  <Youtube className="h-6 w-6 text-destructive" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-foreground">YouTube Assistant</h3>
-                    <Badge variant="secondary" className="text-[10px]">AI-Powered</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Analyze any channel & get personalized scripts, ideas & growth tips
-                  </p>
-                </div>
-                <Sparkles className="h-5 w-5 text-destructive animate-pulse" />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="instagram" className="mt-4 space-y-4">
-          {/* Featured: Instagram Analyzer */}
-          <Card 
-            className="relative overflow-hidden cursor-pointer border-pink-500/30 bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-orange-500/10 hover:border-pink-500/50 hover:shadow-glow transition-all animate-fade-in"
-            onClick={() => navigate("/tools/ig-analyzer")}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20">
-                  <Instagram className="h-6 w-6 text-pink-500" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-foreground">Instagram Analyzer</h3>
-                    <Badge className="text-[10px] bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">New</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Analyze your profile & get personalized growth strategies
-                  </p>
-                </div>
-                <Sparkles className="h-5 w-5 text-pink-500 animate-pulse" />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        <TabsContent value="youtube" className="mt-4 space-y-4" />
+        <TabsContent value="instagram" className="mt-4 space-y-4" />
       </Tabs>
 
       {/* Tool Categories */}

@@ -407,6 +407,67 @@ Include:
 5. Suggested timestamps format`;
         break;
 
+      case "carousel-planner":
+        systemPrompt = `You are an Instagram carousel expert who creates high-engagement multi-slide posts.
+Your carousels should:
+- Have a hook slide that stops scrolling
+- Follow a logical flow
+- End with a strong CTA
+- Include visual design tips`;
+        
+        userPrompt = `Create a ${data.slideCount || 5}-slide Instagram carousel plan for: "${data.topic}"
+Niche: ${data.niche || "general"}
+Goal: ${data.goal || "educate"}
+
+For each slide provide:
+Slide [number]: [Headline]
+[Main content for this slide]
+Visual tip: [design suggestion]
+
+Make sure slide 1 is a hook and the last slide is a CTA.`;
+        break;
+
+      case "content-pillars":
+        systemPrompt = `You are a content strategist who defines core content pillars for brands and creators.
+Your pillars should:
+- Be distinct but complementary
+- Cover different audience needs
+- Be sustainable long-term
+- Include specific content ideas`;
+        
+        userPrompt = `Define 4-5 content pillars for a ${data.niche} creator.
+Target audience: ${data.audience || "general"}
+Primary goal: ${data.goal || "grow"}
+
+For each pillar include:
+Pillar [number]: [Name]
+[Description of this pillar]
+Content Ideas:
+- [Idea 1]
+- [Idea 2]
+- [Idea 3]
+Posting frequency: [suggestion]`;
+        break;
+
+      case "collab-ideas":
+        systemPrompt = `You are a collaboration strategist who helps creators find partnership opportunities.
+Your ideas should:
+- Be realistic for the creator's size
+- Offer mutual benefit
+- Include specific formats
+- Be actionable`;
+        
+        userPrompt = `Generate 10 collaboration ideas for a ${data.niche} creator.
+Account size: ${data.followerCount || "micro"} influencer
+Target audience: ${data.audience || "general"}
+
+For each idea provide:
+[Number]. [Collaboration Title]
+Partner type: [who to collaborate with]
+Format: [how to execute]
+Benefit: [what both parties gain]`;
+        break;
+
       default:
         throw new Error(`Unknown generation type: ${type}`);
     }
