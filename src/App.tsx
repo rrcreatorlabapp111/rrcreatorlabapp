@@ -35,6 +35,21 @@ import { SEOScorePage } from "@/pages/tools/SEOScorePage";
 import { CompetitorAnalysisPage } from "@/pages/tools/CompetitorAnalysisPage";
 import { TitleTesterPage } from "@/pages/tools/TitleTesterPage";
 import { BestPostingTimePage } from "@/pages/tools/BestPostingTimePage";
+import { ThumbnailIdeasPage } from "@/pages/tools/ThumbnailIdeasPage";
+import { VideoHooksPage } from "@/pages/tools/VideoHooksPage";
+import { RevenueCalculatorPage } from "@/pages/tools/RevenueCalculatorPage";
+import { DescriptionGeneratorPage } from "@/pages/tools/DescriptionGeneratorPage";
+import { CaptionGeneratorPage } from "@/pages/tools/CaptionGeneratorPage";
+import { StoryIdeasPage } from "@/pages/tools/StoryIdeasPage";
+import { BioGeneratorPage } from "@/pages/tools/BioGeneratorPage";
+import { IGEngagementPage } from "@/pages/tools/IGEngagementPage";
+import { ReelIdeasPage } from "@/pages/tools/ReelIdeasPage";
+import { ReelScriptPage } from "@/pages/tools/ReelScriptPage";
+import { HashtagGeneratorPage } from "@/pages/tools/HashtagGeneratorPage";
+import { IGContentCalendarPage } from "@/pages/tools/IGContentCalendarPage";
+import { IGHookGeneratorPage } from "@/pages/tools/IGHookGeneratorPage";
+import { IGGrowthStrategyPage } from "@/pages/tools/IGGrowthStrategyPage";
+import { IGMonetizationPage } from "@/pages/tools/IGMonetizationPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,7 +58,6 @@ const OnboardingGuard = ({ children }: { children: React.ReactNode }) => {
   const { needsOnboarding, loading } = useOnboarding();
   const location = useLocation();
 
-  // Don't redirect if on auth or onboarding pages
   const isAuthPage = location.pathname === "/auth";
   const isOnboardingPage = location.pathname === "/onboarding";
 
@@ -83,6 +97,7 @@ const App = () => {
                   <Route path="/tools" element={<ToolsPage />} />
                   <Route path="/tips" element={<TipsPage />} />
                   <Route path="/services" element={<ServicesPage />} />
+                  {/* YouTube Tools */}
                   <Route path="/tools/tags" element={<TagGeneratorPage />} />
                   <Route path="/tools/script" element={<ScriptGeneratorPage />} />
                   <Route path="/tools/text-script" element={<TextToScriptPage />} />
@@ -97,6 +112,22 @@ const App = () => {
                   <Route path="/tools/competitor" element={<CompetitorAnalysisPage />} />
                   <Route path="/tools/title-test" element={<TitleTesterPage />} />
                   <Route path="/tools/best-time" element={<BestPostingTimePage />} />
+                  <Route path="/tools/thumbnail-ideas" element={<ThumbnailIdeasPage />} />
+                  <Route path="/tools/video-hooks" element={<VideoHooksPage />} />
+                  <Route path="/tools/revenue-calc" element={<RevenueCalculatorPage />} />
+                  <Route path="/tools/description-gen" element={<DescriptionGeneratorPage />} />
+                  {/* Instagram Tools */}
+                  <Route path="/tools/caption-gen" element={<CaptionGeneratorPage />} />
+                  <Route path="/tools/story-ideas" element={<StoryIdeasPage />} />
+                  <Route path="/tools/bio-gen" element={<BioGeneratorPage />} />
+                  <Route path="/tools/ig-engagement" element={<IGEngagementPage />} />
+                  <Route path="/tools/reel-ideas" element={<ReelIdeasPage />} />
+                  <Route path="/tools/reel-script" element={<ReelScriptPage />} />
+                  <Route path="/tools/hashtag-gen" element={<HashtagGeneratorPage />} />
+                  <Route path="/tools/ig-calendar" element={<IGContentCalendarPage />} />
+                  <Route path="/tools/ig-hooks" element={<IGHookGeneratorPage />} />
+                  <Route path="/tools/ig-growth" element={<IGGrowthStrategyPage />} />
+                  <Route path="/tools/ig-monetization" element={<IGMonetizationPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </AppLayout>

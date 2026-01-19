@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+
 
 interface Hook {
   text: string;
@@ -42,21 +42,66 @@ export const VideoHooksPage = () => {
     setHooks([]);
 
     try {
-      const response = await supabase.functions.invoke("ai-generator", {
-        body: {
-          type: "video-hooks",
-          topic,
-          style: hookStyle,
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-generator`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            type: "video-hooks",
+            data: { topic, style: hookStyle },
+          }),
+        }
+      );
 
-      if (response.error) throw response.error;
+      if (!response.ok) {
+        if (response.status === 429) {
+          toast.error("Rate limit exceeded. Please try again later.");
+          return;
+        }
+        if (response.status === 402) {
+          toast.error("Credits exhausted. Please add more credits.");
+          return;
+        }
+        throw new Error("Failed to generate hooks");
+      }
 
-      const rawContent = response.data?.content || response.data?.generatedText || "";
-      
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error("No response body");
+
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let fullContent = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            const jsonStr = line.slice(6).trim();
+            if (jsonStr === "[DONE]") continue;
+            try {
+              const parsed = JSON.parse(jsonStr);
+              const content = parsed.choices?.[0]?.delta?.content;
+              if (content) fullContent += content;
+            } catch {
+              // Ignore parse errors
+            }
+          }
+        }
+      }
+
       // Parse the AI response
       const parsedHooks: Hook[] = [];
-      const lines = rawContent.split('\n').filter((line: string) => line.trim());
+      const lines = fullContent.split('\n').filter((line: string) => line.trim());
       
       for (const line of lines) {
         if (line.match(/^\d+\.|^-|^•|^Hook/i)) {
@@ -73,14 +118,13 @@ export const VideoHooksPage = () => {
       }
 
       if (parsedHooks.length === 0) {
-        // Fallback hooks
         parsedHooks.push(
           { text: `You won't believe what happens when ${topic}...`, style: hookStyle, duration: "3 sec", engagement: "High" },
           { text: `Stop scrolling! This ${topic} secret changed everything...`, style: hookStyle, duration: "4 sec", engagement: "Very High" },
         );
       }
 
-      setHooks(parsedHooks.slice(0, 8));
+      setHooks(parsedHooks.slice(0, 10));
       toast.success(`Generated ${parsedHooks.length} hooks!`);
     } catch (error: any) {
       console.error("Error generating hooks:", error);
