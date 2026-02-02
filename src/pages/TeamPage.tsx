@@ -20,6 +20,7 @@ import {
   Lock, Key
 } from "lucide-react";
 import { toast } from "sonner";
+import { ToolAccessManager } from "@/components/admin/ToolAccessManager";
 
 interface TeamMember {
   id: string;
@@ -498,7 +499,7 @@ export const TeamPage = () => {
         {/* Tabs - Full Admin View */}
         {isAdmin ? (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="bg-card/50 border border-border/50 p-1">
+            <TabsList className="bg-card/50 border border-border/50 p-1 flex-wrap h-auto gap-1">
               <TabsTrigger value="team" className="gap-2 data-[state=active]:bg-primary/10">
                 <Users className="h-4 w-4" />
                 My Team
@@ -511,6 +512,10 @@ export const TeamPage = () => {
                     {pendingMembers.length}
                   </Badge>
                 )}
+              </TabsTrigger>
+              <TabsTrigger value="tools" className="gap-2 data-[state=active]:bg-primary/10">
+                <Lock className="h-4 w-4" />
+                Tool Access
               </TabsTrigger>
               <TabsTrigger value="roles" className="gap-2 data-[state=active]:bg-primary/10">
                 <Shield className="h-4 w-4" />
@@ -756,6 +761,15 @@ export const TeamPage = () => {
                   )}
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            {/* Tool Access Tab */}
+            <TabsContent value="tools" className="space-y-4">
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Lock className="h-5 w-5 text-primary" />
+                Tool Access Management
+              </h2>
+              <ToolAccessManager />
             </TabsContent>
 
             {/* Settings Tab */}
