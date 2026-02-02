@@ -34,6 +34,7 @@ import {
   Layout,
   Type,
   Layers,
+  Lock,
 } from "lucide-react";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -41,6 +42,8 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToolAccess } from "@/hooks/useToolAccess";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Tool {
   id: string;
@@ -338,6 +341,8 @@ const instagramTools: ToolCategory[] = [
 
 export const ToolsPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { hasAccess, toolsLocked, loading: accessLoading } = useToolAccess();
   const [activeTab, setActiveTab] = useState("youtube");
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({
     "Content Creation": true,
@@ -354,6 +359,11 @@ export const ToolsPage = () => {
   };
 
   const currentTools = activeTab === "youtube" ? youtubeTools : instagramTools;
+
+  const isToolLocked = (toolId: string) => {
+    if (!user) return true; // Not logged in = locked
+    return !hasAccess(toolId);
+  };
 
   return (
     <div className="px-4 py-6 space-y-6">
@@ -428,6 +438,7 @@ export const ToolsPage = () => {
                     title={tool.title}
                     description={tool.description}
                     onClick={() => navigate(tool.path)}
+                    isLocked={isToolLocked(tool.id)}
                   />
                 </div>
               ))}
