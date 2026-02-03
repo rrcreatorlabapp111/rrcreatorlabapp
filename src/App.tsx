@@ -4,13 +4,15 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { AuthProvider } from "@/hooks/useAuth";
+import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { useMemberApproval } from "@/hooks/useMemberApproval";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SplashScreen } from "@/pages/SplashScreen";
 import { HomePage } from "@/pages/HomePage";
 import { ToolsPage } from "@/pages/ToolsPage";
 import { TipsPage } from "@/pages/TipsPage";
+import { PendingApprovalPage } from "@/pages/PendingApprovalPage";
 
 import { DashboardPage } from "@/pages/DashboardPage";
 import { AuthPage } from "@/pages/AuthPage";
@@ -55,19 +57,50 @@ import { ContentPillarsPage } from "@/pages/tools/ContentPillarsPage";
 import { CollabIdeasPage } from "@/pages/tools/CollabIdeasPage";
 import { ReachEstimatorPage } from "@/pages/tools/ReachEstimatorPage";
 import NotFound from "./pages/NotFound";
+import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
 
-const OnboardingGuard = ({ children }: { children: React.ReactNode }) => {
-  const { needsOnboarding, loading } = useOnboarding();
+// Guard that checks both onboarding and member approval
+const AccessGuard = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading: authLoading } = useAuth();
+  const { needsOnboarding, loading: onboardingLoading } = useOnboarding();
+  const { isApproved, isPending, loading: approvalLoading } = useMemberApproval();
   const location = useLocation();
 
-  const isAuthPage = location.pathname === "/auth";
+  const publicPaths = ["/auth", "/pending-approval"];
+  const isPublicPath = publicPaths.includes(location.pathname);
   const isOnboardingPage = location.pathname === "/onboarding";
 
-  if (loading) return null;
+  // Show loading while checking
+  if (authLoading || onboardingLoading || approvalLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
-  if (needsOnboarding && !isAuthPage && !isOnboardingPage) {
+  // Not logged in - allow auth page, redirect others
+  if (!user) {
+    if (location.pathname === "/auth") {
+      return <>{children}</>;
+    }
+    return <Navigate to="/auth" replace />;
+  }
+
+  // Logged in but pending approval
+  if (isPending && !isPublicPath) {
+    return <Navigate to="/pending-approval" replace />;
+  }
+
+  // Approved user on pending page - redirect to home
+  if (isApproved && location.pathname === "/pending-approval") {
+    return <Navigate to="/" replace />;
+  }
+
+  // Check onboarding for approved users
+  if (isApproved && needsOnboarding && !isOnboardingPage && !isPublicPath) {
     return <Navigate to="/onboarding" replace />;
   }
 
@@ -85,11 +118,12 @@ const App = () => {
           <Sonner />
           {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
           <BrowserRouter>
-            <OnboardingGuard>
+            <AccessGuard>
               <AppLayout>
                 <Routes>
                   <Route path="/" element={<HomePage />} />
                   <Route path="/auth" element={<AuthPage />} />
+                  <Route path="/pending-approval" element={<PendingApprovalPage />} />
                   <Route path="/onboarding" element={<OnboardingPage />} />
                   <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
@@ -139,7 +173,7 @@ const App = () => {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </AppLayout>
-            </OnboardingGuard>
+            </AccessGuard>
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
