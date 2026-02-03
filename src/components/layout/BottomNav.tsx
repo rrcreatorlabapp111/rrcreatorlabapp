@@ -1,4 +1,4 @@
-import { Home, Wrench, TrendingUp, Briefcase } from "lucide-react";
+import { Home, Wrench, TrendingUp } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -6,7 +6,6 @@ const navItems = [
   { icon: Home, label: "Home", path: "/" },
   { icon: Wrench, label: "Tools", path: "/tools" },
   { icon: TrendingUp, label: "Tips", path: "/tips" },
-  { icon: Briefcase, label: "Services", path: "/services" },
 ];
 
 export const BottomNav = () => {
