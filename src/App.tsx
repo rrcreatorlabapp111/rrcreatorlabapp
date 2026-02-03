@@ -107,73 +107,85 @@ const AccessGuard = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-const App = () => {
+const AppContent = () => {
+  const { user, loading } = useAuth();
   const [showSplash, setShowSplash] = useState(true);
 
+  // Only show splash for authenticated users, skip for unauthenticated
+  const shouldShowSplash = showSplash && !loading && user;
+
+  return (
+    <>
+      {shouldShowSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+      <AccessGuard>
+        <AppLayout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/pending-approval" element={<PendingApprovalPage />} />
+            <Route path="/onboarding" element={<OnboardingPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/team" element={<TeamPage />} />
+            <Route path="/tutorials" element={<TutorialsPage />} />
+            <Route path="/content-calendar" element={<ContentCalendarPage />} />
+            <Route path="/saved-content" element={<SavedContentPage />} />
+            <Route path="/tools" element={<ToolsPage />} />
+            <Route path="/tips" element={<TipsPage />} />
+            
+            {/* YouTube Tools */}
+            <Route path="/tools/tags" element={<TagGeneratorPage />} />
+            <Route path="/tools/script" element={<ScriptGeneratorPage />} />
+            <Route path="/tools/text-script" element={<TextToScriptPage />} />
+            <Route path="/tools/shorts-ideas" element={<ShortsIdeasPage />} />
+            <Route path="/tools/planner" element={<YouTubePlannerPage />} />
+            <Route path="/tools/growth-calc" element={<GrowthCalculatorPage />} />
+            <Route path="/tools/watch-time" element={<WatchTimeEstimatorPage />} />
+            <Route path="/tools/engagement" element={<EngagementAnalyzerPage />} />
+            <Route path="/tools/growth-predict" element={<GrowthPredictorPage />} />
+            <Route path="/tools/trending" element={<TrendingTopicsPage />} />
+            <Route path="/tools/seo" element={<SEOScorePage />} />
+            <Route path="/tools/competitor" element={<CompetitorAnalysisPage />} />
+            <Route path="/tools/title-test" element={<TitleTesterPage />} />
+            <Route path="/tools/best-time" element={<BestPostingTimePage />} />
+            <Route path="/tools/thumbnail-ideas" element={<ThumbnailIdeasPage />} />
+            <Route path="/tools/video-hooks" element={<VideoHooksPage />} />
+            <Route path="/tools/revenue-calc" element={<RevenueCalculatorPage />} />
+            <Route path="/tools/description-gen" element={<DescriptionGeneratorPage />} />
+            {/* Instagram Tools */}
+            <Route path="/tools/caption-gen" element={<CaptionGeneratorPage />} />
+            <Route path="/tools/story-ideas" element={<StoryIdeasPage />} />
+            <Route path="/tools/bio-gen" element={<BioGeneratorPage />} />
+            <Route path="/tools/ig-engagement" element={<IGEngagementPage />} />
+            <Route path="/tools/reel-ideas" element={<ReelIdeasPage />} />
+            <Route path="/tools/reel-script" element={<ReelScriptPage />} />
+            <Route path="/tools/hashtag-gen" element={<HashtagGeneratorPage />} />
+            <Route path="/tools/ig-calendar" element={<IGContentCalendarPage />} />
+            <Route path="/tools/ig-hooks" element={<IGHookGeneratorPage />} />
+            <Route path="/tools/ig-growth" element={<IGGrowthStrategyPage />} />
+            <Route path="/tools/ig-monetization" element={<IGMonetizationPage />} />
+            <Route path="/tools/carousel-planner" element={<CarouselPlannerPage />} />
+            <Route path="/tools/content-pillars" element={<ContentPillarsPage />} />
+            <Route path="/tools/collab-ideas" element={<CollabIdeasPage />} />
+            <Route path="/tools/reach-estimator" element={<ReachEstimatorPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AppLayout>
+      </AccessGuard>
+    </>
+  );
+};
+
+const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
           <BrowserRouter>
-            <AccessGuard>
-              <AppLayout>
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/auth" element={<AuthPage />} />
-                  <Route path="/pending-approval" element={<PendingApprovalPage />} />
-                  <Route path="/onboarding" element={<OnboardingPage />} />
-                  <Route path="/dashboard" element={<DashboardPage />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/admin" element={<AdminPage />} />
-                  <Route path="/team" element={<TeamPage />} />
-                  <Route path="/tutorials" element={<TutorialsPage />} />
-                  <Route path="/content-calendar" element={<ContentCalendarPage />} />
-                  <Route path="/saved-content" element={<SavedContentPage />} />
-                  <Route path="/tools" element={<ToolsPage />} />
-                  <Route path="/tips" element={<TipsPage />} />
-                  
-                  {/* YouTube Tools */}
-                  <Route path="/tools/tags" element={<TagGeneratorPage />} />
-                  <Route path="/tools/script" element={<ScriptGeneratorPage />} />
-                  <Route path="/tools/text-script" element={<TextToScriptPage />} />
-                  <Route path="/tools/shorts-ideas" element={<ShortsIdeasPage />} />
-                  <Route path="/tools/planner" element={<YouTubePlannerPage />} />
-                  <Route path="/tools/growth-calc" element={<GrowthCalculatorPage />} />
-                  <Route path="/tools/watch-time" element={<WatchTimeEstimatorPage />} />
-                  <Route path="/tools/engagement" element={<EngagementAnalyzerPage />} />
-                  <Route path="/tools/growth-predict" element={<GrowthPredictorPage />} />
-                  <Route path="/tools/trending" element={<TrendingTopicsPage />} />
-                  <Route path="/tools/seo" element={<SEOScorePage />} />
-                  <Route path="/tools/competitor" element={<CompetitorAnalysisPage />} />
-                  <Route path="/tools/title-test" element={<TitleTesterPage />} />
-                  <Route path="/tools/best-time" element={<BestPostingTimePage />} />
-                  <Route path="/tools/thumbnail-ideas" element={<ThumbnailIdeasPage />} />
-                  <Route path="/tools/video-hooks" element={<VideoHooksPage />} />
-                  <Route path="/tools/revenue-calc" element={<RevenueCalculatorPage />} />
-                  <Route path="/tools/description-gen" element={<DescriptionGeneratorPage />} />
-                  {/* Instagram Tools */}
-                  <Route path="/tools/caption-gen" element={<CaptionGeneratorPage />} />
-                  <Route path="/tools/story-ideas" element={<StoryIdeasPage />} />
-                  <Route path="/tools/bio-gen" element={<BioGeneratorPage />} />
-                  <Route path="/tools/ig-engagement" element={<IGEngagementPage />} />
-                  <Route path="/tools/reel-ideas" element={<ReelIdeasPage />} />
-                  <Route path="/tools/reel-script" element={<ReelScriptPage />} />
-                  <Route path="/tools/hashtag-gen" element={<HashtagGeneratorPage />} />
-                  <Route path="/tools/ig-calendar" element={<IGContentCalendarPage />} />
-                  <Route path="/tools/ig-hooks" element={<IGHookGeneratorPage />} />
-                  <Route path="/tools/ig-growth" element={<IGGrowthStrategyPage />} />
-                  <Route path="/tools/ig-monetization" element={<IGMonetizationPage />} />
-                  <Route path="/tools/carousel-planner" element={<CarouselPlannerPage />} />
-                  <Route path="/tools/content-pillars" element={<ContentPillarsPage />} />
-                  <Route path="/tools/collab-ideas" element={<CollabIdeasPage />} />
-                  <Route path="/tools/reach-estimator" element={<ReachEstimatorPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </AppLayout>
-            </AccessGuard>
+            <AppContent />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
