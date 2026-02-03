@@ -11,7 +11,7 @@ import { SplashScreen } from "@/pages/SplashScreen";
 import { HomePage } from "@/pages/HomePage";
 import { ToolsPage } from "@/pages/ToolsPage";
 import { TipsPage } from "@/pages/TipsPage";
-import { ServicesPage } from "@/pages/ServicesPage";
+
 import { DashboardPage } from "@/pages/DashboardPage";
 import { AuthPage } from "@/pages/AuthPage";
 import { ProfilePage } from "@/pages/ProfilePage";
@@ -100,7 +100,7 @@ const App = () => {
                   <Route path="/saved-content" element={<SavedContentPage />} />
                   <Route path="/tools" element={<ToolsPage />} />
                   <Route path="/tips" element={<TipsPage />} />
-                  <Route path="/services" element={<ServicesPage />} />
+                  
                   {/* YouTube Tools */}
                   <Route path="/tools/tags" element={<TagGeneratorPage />} />
                   <Route path="/tools/script" element={<ScriptGeneratorPage />} />
