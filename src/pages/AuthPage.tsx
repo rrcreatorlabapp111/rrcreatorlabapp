@@ -94,16 +94,41 @@ export const AuthPage = () => {
           return;
         }
 
-        const { error } = await signUp(email, password, displayName);
+        const { error, data } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+            data: {
+              display_name: displayName,
+            },
+          },
+        });
+
         if (error) {
           if (error.message.includes("already registered")) {
             toast.error("This email is already registered. Please sign in.");
           } else {
             toast.error(error.message);
           }
-        } else {
-          toast.success("Account created! Welcome to RR Creator Labs!");
-          navigate("/");
+        } else if (data.user) {
+          // Create team_member entry with pending status
+          const { error: memberError } = await supabase
+            .from("team_members")
+            .insert({
+              user_id: data.user.id,
+              name: displayName || email.split("@")[0],
+              email: email,
+              role: "member",
+              status: "pending",
+            });
+
+          if (memberError) {
+            console.error("Error creating team member:", memberError);
+          }
+
+          toast.success("Account created! Waiting for admin approval.");
+          navigate("/pending-approval");
         }
       }
     } finally {
