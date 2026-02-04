@@ -9,9 +9,9 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Animated background orbs */}
-      <div className="orb orb-1" aria-hidden="true" />
-      <div className="orb orb-2" aria-hidden="true" />
-      <div className="orb orb-3" aria-hidden="true" />
+      <div className="orb orb-1 pointer-events-none" aria-hidden="true" />
+      <div className="orb orb-2 pointer-events-none" aria-hidden="true" />
+      <div className="orb orb-3 pointer-events-none" aria-hidden="true" />
       
       {/* Noise texture overlay */}
       <div className="noise-overlay" aria-hidden="true" />
