@@ -9,6 +9,7 @@ import { useOnboarding } from "@/hooks/useOnboarding";
 import { useMemberApproval } from "@/hooks/useMemberApproval";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SplashScreen } from "@/pages/SplashScreen";
+import { AuthLoadingSkeleton } from "@/components/auth/AuthLoadingSkeleton";
 import { HomePage } from "@/pages/HomePage";
 import { ToolsPage } from "@/pages/ToolsPage";
 import { TipsPage } from "@/pages/TipsPage";
@@ -71,8 +72,14 @@ const AccessGuard = ({ children }: { children: React.ReactNode }) => {
   const publicPaths = ["/auth", "/pending-approval"];
   const isPublicPath = publicPaths.includes(location.pathname);
   const isOnboardingPage = location.pathname === "/onboarding";
+  const isAuthPage = location.pathname === "/auth";
 
-  // Show loading while checking
+  // Show auth skeleton while loading on auth page
+  if (authLoading && isAuthPage) {
+    return <AuthLoadingSkeleton />;
+  }
+
+  // Show loading spinner for other pages
   if (authLoading || onboardingLoading || approvalLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
