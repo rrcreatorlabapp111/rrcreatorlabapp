@@ -7,10 +7,11 @@ const config: CapacitorConfig = {
   android: {
     allowMixedContent: true,
   },
-  server: {
-    url: 'https://9199302f-fe0f-497a-983f-295b4ed0d352.lovableproject.com?forceHideBadge=true',
-    cleartext: true
-  }
+  // For development, uncomment the server block below for live reload:
+  // server: {
+  //   url: 'https://9199302f-fe0f-497a-983f-295b4ed0d352.lovableproject.com?forceHideBadge=true',
+  //   cleartext: true
+  // }
 };
 
 export default config;
