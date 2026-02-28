@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import growthAnalytics from "@/assets/growth-analytics.png";
 import creatorSuccess from "@/assets/creator-success.png";
 import socialEngagement from "@/assets/social-engagement.png";
+import rrLogo from "@/assets/rr-creator-lab-logo.png";
 const GOOGLE_FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLSc7w7_crTXDPXa1Rz_2OOkAX7k_5jq88dEdLr8KiiaICcGh5g/viewform";
 
 const quickActions = [
@@ -61,6 +62,7 @@ export const HomePage = () => {
     <div className="px-4 py-6 space-y-6">
       {/* Hero Section */}
       <div className="text-center space-y-4 pt-4 animate-fade-in">
+        <img src={rrLogo} alt="RR Creator Lab Logo" className="w-32 h-32 mx-auto rounded-full object-cover" />
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-primary/30">
           <Sparkles className="h-4 w-4 text-primary animate-pulse" />
           <span className="text-sm text-muted-foreground">Creator Growth Platform</span>
